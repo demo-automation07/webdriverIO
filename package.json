@@ -1,0 +1,16 @@
+{
+  "name": "demo_team_12",
+  "type": "module",
+  "devDependencies": {
+    "@wdio/cli": "^9.2.11",
+    "@wdio/local-runner": "^9.2.11",
+    "@wdio/mocha-framework": "^9.2.8",
+    "@wdio/spec-reporter": "^9.2.8",
+    "date-fns": "^2.30.0",
+    "fs": "^0.0.1-security",
+    "moment": "^2.29.4"
+  },
+  "scripts": {
+    "wdio": "wdio run ./wdio.conf.js"
+  }
+}

@@ -153,12 +153,12 @@ export const config = {
 
         ['json', {
             outputDir: './report/json-report',
-            // outputFileFormat: (opts) => {
-            //     const specName = path.basename(opts.specs[0], '.js');
-            //   //  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-            //     const timestamp = "";
-            //     return `results-[${opts.cid}].${specName}-${timestamp}-${opts.capabilities.browserName}.json`
-            // },
+            outputFileFormat: (opts) => {
+               // const specName = path.basename(opts.specs[0], '.js');
+              //  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+                const timestamp = "";
+                return `results-[${opts.cid}]-${opts.capabilities.browserName}.json`
+            },
             
             combined: true
         }]
@@ -273,7 +273,7 @@ export const config = {
         if (passed) {
             await browser.takeScreenshot();
         }
-        if (!passed) {
+         if (!passed) {
             await browser.takeScreenshot();
         }
         if (error){
@@ -324,7 +324,7 @@ export const config = {
      * @param {<Object>} results object containing test results
      */
     onComplete: function (exitCode, config, capabilities, results) {
-        mergeResults(json_directory, 'wdio-*', 'combined-report.json')
+        mergeResults(json_directory, 'results-.*.json', 'combined-report.json')
         const reportError = new Error('Could not generate Allure report')
         const generation = allure(['generate', allure_directory + '/allure-results', '--clean', '-o', allure_directory + '/allure-report'])
 

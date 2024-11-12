@@ -1,0 +1,10 @@
+{
+    "genders": [
+      "male",
+      "female",
+      "nonbinary",
+      "genderfluid",
+      "agender",
+      "other"
+    ]
+}

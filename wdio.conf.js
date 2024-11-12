@@ -1,3 +1,15 @@
+
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const allure = require('allure-commandline');
+const allure_directory = 'report/allure-report';
+const json_directory = "report/json-report"
+import mergeResults from '@wdio/json-reporter/mergeResults'
+const fs = require('fs');
+const path = require('path');
+
+
+
 export const config = {
     //
     // ====================
@@ -51,7 +63,14 @@ export const config = {
     //
     capabilities: [{
         // capabilities for local browser web tests
-        browserName: 'chrome' // or "firefox", "microsoftedge", "safari"
+       
+        maxInstances: 1,
+        //
+        browserName: 'chrome',// or "firefox", "microsoftedge", "safari"
+
+        // 'goog:chromeOptions': {
+        //     args: ['--headless', '--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage', '--window-size=1920,1080', '--ignore-certificate-errors']
+        // },
     }],
 
     //
@@ -124,7 +143,26 @@ export const config = {
     // Test reporter for stdout.
     // The only one supported by default is 'dot'
     // see also: https://webdriver.io/docs/dot-reporter
-    reporters: ['spec'],
+    reporters: ['spec',
+
+        ['allure', {
+            outputDir: allure_directory + '/allure-results',
+            disableWebdriverStepsReporting: true,
+            disableWebdriverScreenshotsReporting: false,
+        }],
+
+        ['json', {
+            outputDir: './report/json-report',
+            outputFileFormat: (opts) => {
+                const specName = path.basename(opts.specs[0], '.js');
+              //  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+                const timestamp = "";
+                return `results-[${opts.cid}].${specName}-${timestamp}-${opts.capabilities.browserName}.json`
+            },
+            
+            //combined: true
+        }]
+    ],
 
     // Options to be passed to Mocha.
     // See the full list at http://mochajs.org/
@@ -185,8 +223,12 @@ export const config = {
      * @param {Array.<String>} specs        List of spec file paths that are to be run
      * @param {object}         browser      instance of created browser/device session
      */
-    // before: function (capabilities, specs) {
-    // },
+    
+    before: async function (capabilities, specs) {
+        browser.url(`https://demo.automationtesting.in/`);
+        browser.maximizeWindow();
+        //await browser.pause(2000);
+    },
     /**
      * Runs before a WebdriverIO command gets executed.
      * @param {string} commandName hook command name
@@ -227,8 +269,18 @@ export const config = {
      * @param {boolean} result.passed    true if test has passed, otherwise false
      * @param {object}  result.retries   information about spec related retries, e.g. `{ attempts: 0, limit: 0 }`
      */
-    // afterTest: function(test, context, { error, result, duration, passed, retries }) {
-    // },
+    afterTest: async function (test, context, { error, result, duration, passed, retries }) {
+        if (passed) {
+            await browser.takeScreenshot();
+        }
+        if (!passed) {
+            await browser.takeScreenshot();
+        }
+        if (error){
+            await browser.takeScreenshot();
+        }
+
+    },
 
 
     /**
@@ -271,8 +323,28 @@ export const config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      * @param {<Object>} results object containing test results
      */
-    // onComplete: function(exitCode, config, capabilities, results) {
-    // },
+    onComplete: function (exitCode, config, capabilities, results) {
+        mergeResults(json_directory, 'results-.*.json', 'wdio-custom-filename.json')
+        const reportError = new Error('Could not generate Allure report')
+        const generation = allure(['generate', allure_directory + '/allure-results', '--clean', '-o', allure_directory + '/allure-report'])
+
+        return new Promise((resolve, reject) => {
+            const generationTimeout = setTimeout(
+                () => reject(reportError),
+                5000)
+
+            generation.on('exit', function (exitCode) {
+                clearTimeout(generationTimeout)
+
+                if (exitCode !== 0) {
+                    return reject(reportError)
+                }
+
+                console.log('Allure report successfully generated')
+                resolve()
+            })
+        })
+    },
     /**
     * Gets executed when a refresh happens.
     * @param {string} oldSessionId session ID of the old session

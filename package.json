@@ -21,6 +21,10 @@
     "@faker-js/faker": "^9.2.0",
     "@wdio/json-reporter": "^9.2.2",
     "allure-commandline": "^2.21.0",
+    "chai": "^5.1.2",
+    "dotenv": "^16.4.5",
+    "imap-simple": "^5.1.0",
+    "mailparser": "^3.7.1",
     "wdio-json-reporter": "^4.0.1",
     "winston": "^3.17.0"
   }

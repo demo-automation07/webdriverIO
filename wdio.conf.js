@@ -68,9 +68,9 @@ export const config = {
         //
         browserName: 'chrome',// or "firefox", "microsoftedge", "safari"
 
-        // 'goog:chromeOptions': {
-        //     args: ['--headless', '--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage', '--window-size=1920,1080', '--ignore-certificate-errors']
-        // },
+        'goog:chromeOptions': {
+            args: ['--headless', '--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage', '--window-size=1920,1080', '--ignore-certificate-errors']
+        },
     }],
 
     //

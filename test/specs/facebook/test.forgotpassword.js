@@ -18,7 +18,7 @@ describe('validate forgot password',function(){
     });
 
     it('Fetch OTP from email', async function() {
-        const emailData = await emailUtil.getEmailBodyAndSubject(5000);
+        const emailData = await emailUtil.getEmailBodyAndSubject(50000);
         console.log('Email Subject:', emailData.subject);
         console.log('Email Body:', emailData.body);
         

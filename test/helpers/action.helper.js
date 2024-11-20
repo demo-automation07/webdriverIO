@@ -1,5 +1,6 @@
 import { browser } from '@wdio/globals';
 import fs from 'fs';
+import { logError, logInfo } from './logger.helper';
 
 export default class ActionHelper {
 
@@ -10,6 +11,7 @@ export default class ActionHelper {
      */
     async clickElement(element) {
         try {
+            await this.waitForExist(element);
             await this.waitForElementToClickable(element);
             await this.highLightElement(element);
             await element.click();
@@ -26,6 +28,7 @@ export default class ActionHelper {
      */
     async doubleClickElement(element) {
         try {
+            await this.waitForExist(element);
             await this.waitForElementToClickable(element);
             await this.highLightElement(element);
             await element.doubleClick();
@@ -43,6 +46,7 @@ export default class ActionHelper {
      */
     async setValueToElement(element, value) {
         try {
+            await this.waitForExist(element);
             await this.waitForElementVisible(element);
             await this.highLightElement(element);
             await element.setValue(value);
@@ -59,6 +63,7 @@ export default class ActionHelper {
      */
     async clearValueFromElement(element) {
         try {
+            await this.waitForExist(element);
             await this.waitForElementVisible(element);
             await element.clearValue();
         } catch (error) {
@@ -115,13 +120,66 @@ export default class ActionHelper {
     }
 
     /**
+     * @description Scrolls the provided element to the nearest of the viewport.
+     * @param {Webelement} element - The web element to scroll into the nearest.
+     * @returns {Promise} A promise that resolves when the element is scrolled to the center.
+     * @throws {Error} Throws error if the element is not found or any issue occurs during the scroll action.
+     */
+    async scrollElementIntoNearest(element) {
+        try {
+            await this.waitForExist(element);
+            return await element.scrollIntoView({ block: 'center', inline: 'nearest' });
+        } catch (error) {
+            console.error(`Error scrolling element to nearest: ${error}`);
+            throw error;
+        }
+    }
+
+    /**
+     * Scroll within a container to make the element visible.
+     * @param {WebDriverIO.Element} container - The scrollable container (ul).
+     * @param {WebDriverIO.Element} element - The element (language) to scroll into view.
+     */
+    async scrollWithinContainer(container, element) {
+        try {
+            
+                // First, check if the element is already in the visible part of the container
+                const isElementVisible = await element.isDisplayed();
+                if (isElementVisible) {
+                    logInfo('Element is already visible in the container, no need to scroll.');
+                    return;
+                }
+
+        // Scroll using the browser's execute method if the element is out of view
+        await browser.execute(function(conatainer,element) {
+            // Scroll the container to the target element using `scrollIntoView`
+            element.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+        }, container, element);
+
+       // logInfo(`Scrolled element ${element} into view successfully.`);
+        } catch (error) {
+            logError('Error scrolling within container:', error);
+            throw error;
+        }
+    }
+
+    /**
      * @description Waits for the provided element to become visible.
      * @param {Webelement} element - The web element to wait for visibility.
      * @throws {Error} Throws error if the element is not visible within the timeout.
      */
     async waitForElementVisible(element) {
         try {
-            await browser.waitUntil(() => element.isDisplayed());
+            await browser.waitUntil(
+                async () => {
+                    const isDisplayed = await element.isDisplayed(); // Check if the element is visible
+                    return isDisplayed === true; // Return a boolean
+                },
+                {
+                    timeout: 5000,  // Timeout in ms
+                    timeoutMsg: 'Element was not visible after 5 seconds', // Custom message
+                }
+            );
         } catch (error) {
             console.error(`Error waiting for element to be visible: ${error}`);
             throw error;
@@ -142,19 +200,30 @@ export default class ActionHelper {
         }
     }
 
-    /**
-     * @description Waits for the provided element to exist in the DOM.
-     * @param {Webelement} element - The web element to wait for existence.
-     * @throws {Error} Throws error if the element does not exist within the timeout.
-     */
-    async waitForExist(element) {
-        try {
-            await element.waitForExist({ timeout: 5000 });
-        } catch (error) {
-            console.error(`Error waiting for element to exist: ${error}`);
-            throw error;
+   /**
+ * @description Waits for the provided element to exist in the DOM.
+ * @param {Webelement} element - The web element to wait for existence.
+ * @param {number} [timeout=5000] - Timeout duration in milliseconds (default: 5000ms).
+ * @param {string} [errorMessage] - Optional custom error message.
+ * @throws {Error} Throws error if the element does not exist within the timeout.
+ */
+async waitForExist(element, timeout = 5000, errorMessage = 'Element not found within the timeout') {
+    try {
+        // Wait for the element to exist within the specified timeout
+        await element.waitForExist({ timeout: timeout });
+        logInfo(`Element found: ${element.selector}`);  // Optional log if element is found
+    } catch (error) {
+        // Handle error if the element does not exist within the timeout
+        if (error.message.includes('timeout')) {
+            const errorMsg = errorMessage || `Element with selector "${element.selector}" was not found within ${timeout}ms.`;
+            logError(errorMsg);
+            throw new Error(errorMsg);  // Throw a custom error message
         }
+        // Rethrow the error if it is not related to timeout
+        logError(`Unexpected error while waiting for element: ${error.message}`);
+        throw error;
     }
+}
 
     /**
      * @description Waits for the cancel loading element to disappear.
@@ -273,6 +342,43 @@ export default class ActionHelper {
             throw error;
         }
     }
+
+     /**
+      
+    * @description Selects an option from a dropdown by its value.
+    * @param {Webelement} element - The web element to select
+    * @param {string} text - The text of the option to be selected from the dropdown.
+    * @throws {Error} Throws error if the dropdown or the value option cannot be found or if any issue occurs during the selection.
+
+     */
+    async SelectElementByVisibleText(element,text) {
+        try {
+            await this.waitForExist(element);
+            await element.selectByVisibleText(text);
+        } catch (error) {
+            console.error(`Error selecting element from value: ${error}`);
+            throw error;
+        }
+    }
+
+     /**
+      
+    * @description Selects an option from a dropdown by its value.
+    * @param {Webelement} element - The web element to select
+    * @param {string} value - The value of the option to be selected from the dropdown.
+    * @throws {Error} Throws error if the dropdown or the value option cannot be found or if any issue occurs during the selection.
+
+     */
+     async SelectElementByValue(element,value) {
+        try {
+            await this.waitForExist(element);
+            await element.selectByValue(value);
+        } catch (error) {
+            console.error(`Error selecting element from value: ${error}`);
+            throw error;
+        }
+    }
+
 
     /**
      * @description Retrieves the value attribute from the provided element.

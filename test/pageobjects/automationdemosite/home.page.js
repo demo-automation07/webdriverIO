@@ -1,8 +1,7 @@
 import { $ } from '@wdio/globals' 
 import actionhelper from '../../helpers/action.helper.js'
-import LoggerHelper from '../../helpers/logger.helper.js'
+import {logInfo,logError} from '../../helpers/logger.helper.js'
 
-const log = new LoggerHelper();
 
 /**
  * @class HomePage
@@ -41,10 +40,10 @@ class HomePage extends actionhelper {
      */
     async clickSkipSignIn () {
         try {
-            log.logInfo('Clicking on the "Skip Sign In" button', 'HomePage');
+            logInfo('Clicking on the "Skip Sign In" button', 'HomePage');
             await this.clickElement(this.btnSkipSignIn);
         } catch (error) {
-            log.logError('Failed to click the "Skip Sign In" button', 'HomePage');
+            logError('Failed to click the "Skip Sign In" button', 'HomePage');
             throw new Error('Error clicking the "Skip Sign In" button: ' + error.message);
         }
     }
@@ -56,10 +55,10 @@ class HomePage extends actionhelper {
      */
     async clickSignIn () {
         try {
-            log.logInfo('Clicking on the "Sign In" button', 'HomePage');
+            logInfo('Clicking on the "Sign In" button', 'HomePage');
             await this.clickElement(this.btnSignIn);
         } catch (error) {
-            log.logError('Failed to click the "Sign In" button', 'HomePage');
+            logError('Failed to click the "Sign In" button', 'HomePage');
             throw new Error('Error clicking the "Sign In" button: ' + error.message);
         }
     }
@@ -72,10 +71,10 @@ class HomePage extends actionhelper {
      */
     async enterEmail (email) {
         try {
-            log.logInfo(`Entering email: ${email}`, 'HomePage');
+            logInfo(`Entering email: ${email}`, 'HomePage');
             await this.setValueToElement(this.inputEmail, email);
         } catch (error) {
-            log.logError(`Failed to enter email: ${email}`, 'HomePage');
+            logError(`Failed to enter email: ${email}`, 'HomePage');
             throw new Error('Error entering email address: ' + error.message);
         }
     }

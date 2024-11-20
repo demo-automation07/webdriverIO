@@ -1,7 +1,7 @@
 import winston from 'winston';
 import { addStep } from '@wdio/allure-reporter';
 
-export default class LoggerHelper {
+class LoggerHelper {
   constructor() {
     this.logger = this.createLogger(); // Initialize logger when an instance of LoggerHelper is created
   }
@@ -84,6 +84,8 @@ export default class LoggerHelper {
     try {
       // Log error message to the logger
       this.logger.error(message, { label });
+      addStep(message, { label });
+      console.log(message, { label });
     } catch (error) {
       console.error("Error logging error message:", error);
       throw new Error('Error logging error message');
@@ -124,3 +126,13 @@ export default class LoggerHelper {
     }
   }
 }
+
+const loggerHelper = new LoggerHelper();
+
+export const logInfo = (message, label) => {
+  loggerHelper.logInfo(message, label);
+};
+
+export const logError = (message, label) => {
+  loggerHelper.logError(message, label);
+};

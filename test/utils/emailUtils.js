@@ -1,10 +1,12 @@
 import imaps from 'imap-simple';
 import { simpleParser } from 'mailparser';
+import {logError,logInfo} from '../helpers/logger.helper.js';
+
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 const config = {
     imap: {
-        user: 'saranyatestemailv@gmail.com',
-        password: 'mbxm iudw btxl kduw', 
+        user: 'automationdemo07@gmail.com',
+        password: 'gczz meqt lvai axgr', 
         host: 'imap.gmail.com',
         port: 993,
         tls: true,
@@ -25,9 +27,17 @@ class EmailUtil {
                 const searchCriteria = ['UNSEEN'];
                 const fetchOptions = { bodies: ['HEADER', 'TEXT'], markSeen: true };
             
+                 
+                logInfo('Fetching unread emails...', 'emailutility');
+    
                 // Fetch unseen emails
                 const messages = await connection.search(searchCriteria, fetchOptions);
-                console.log("+++++++++", messages);
+
+                if (messages.length > 0) {
+                    logInfo(`Found ${messages.length} unread emails.`, 'emailutility');
+                } else {
+                    logInfo('No unread emails found yet. Retrying...', 'emailutility');
+                }
     
                 // Parse and check each email
                 for (const item of messages) {
@@ -42,6 +52,7 @@ class EmailUtil {
     
                 await connection.end();
             } catch (error) {
+                logError(error,'++++emailerror++++')
                 console.error('Error in email verification:', error);
             }
     

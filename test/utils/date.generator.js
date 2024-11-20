@@ -140,4 +140,4 @@ class DataGeneratorHelper {
 
 
 }
-module.exports = new DataGeneratorHelper();
+export default new DataGeneratorHelper();

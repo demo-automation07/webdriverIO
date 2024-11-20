@@ -1,7 +1,7 @@
 import { $ } from '@wdio/globals'
 import actionhelper from '../../helpers/action.helper.js'
-import LoggerHelper from '../../helpers/logger.helper.js'
-const log = new LoggerHelper();
+import {logInfo,logError} from '../../helpers/logger.helper.js'
+
 
 /**
  * RegisterPage class that contains specific selectors and methods for interacting with the registration page.
@@ -20,25 +20,45 @@ class RegisterPage extends actionhelper {
         return $('#basicBootstrapForm input[placeholder="Last Name"]');
     }
 
-    get inputAddress() {
-        return $('#basicBootstrapForm textarea[placeholder="Address"]');
+    get multiSelectDropdown() {
+        return $('#msdd'); // Selector for the multi-select dropdown
+    }
+
+    get languageListContainer() {
+        return $('ul.ui-autocomplete');
+    }
+
+    // Selector for a language item (example: French)
+    get LanguageItem() {
+        return "//div[@id='msdd']/following-sibling::div//a[text()='{language}']";
+    }
+
+    get languagesList() {
+        return $$('.ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content.ui-corner-all li'); // List of languages
     }
 
     get inputEmail() {
         return $('#basicBootstrapForm input[type="email"]');
     }
 
+    get languageLabel(){
+        return $("//div[@class='form-group']/label[text()='Languages']");
+    }
+
     get inputPhone() {
         return $('#basicBootstrapForm input[type="tel"]');
     }
 
+    get genderRadioButton(){
+        return '#basicBootstrapForm input[value="{gender}"]';
+    }
     // Gender radio buttons
     get radioBtnGenderMale() {
         return $('#basicBootstrapForm input[value="Male"]');
     }
 
     get radioBtnGenderFemale() {
-        return $('#basicBootstrapForm input[value="Female"]');
+        return $('#basicBootstrapForm input[value="FeMale"]');
     }
 
     // Hobbies checkbox group
@@ -69,6 +89,10 @@ class RegisterPage extends actionhelper {
         return $('#imagesrc');
     }
 
+    get ddSkills(){
+        return $('#Skills');
+    }
+
     /**
      * @description Enter the first name in the first name input field.
      * @param {string} firstName - The first name to be entered.
@@ -77,10 +101,10 @@ class RegisterPage extends actionhelper {
      */
     async enterFirstName(firstName) {
         try {
-            log.logInfo(`Entering first name: ${firstName}`, 'Register Page');
+            logInfo(`Entering first name: ${firstName}`, 'Register Page');
             await this.setValueToElement(this.inputFirstName, firstName);
         } catch (error) {
-            log.logError(`Failed to enter first name: ${firstName}`, 'Register Page');
+            logError(`Failed to enter first name: ${firstName}`, 'Register Page');
             throw new Error(`Error entering first name: ${error.message}`);
         }
     }
@@ -93,29 +117,113 @@ class RegisterPage extends actionhelper {
      */
     async enterLastName(lastName) {
         try {
-            log.logInfo(`Entering last name: ${lastName}`, 'Register Page');
+            logInfo(`Entering last name: ${lastName}`, 'Register Page');
             await this.setValueToElement(this.inputLastName, lastName);
         } catch (error) {
-            log.logError(`Failed to enter last name: ${lastName}`, 'Register Page');
+            logError(`Failed to enter last name: ${lastName}`, 'Register Page');
             throw new Error(`Error entering last name: ${error.message}`);
         }
     }
 
     /**
-     * @description Enter the address in the address input field.
-     * @param {string} address - The address to be entered.
-     * @returns {Promise<void>}
-     * @throws {Error} Throws an error if entering the address fails.
+     * @description Opens the multi-select dropdown.
+     * @throws {Error} Throws error if the dropdown cannot be opened.
      */
-    async enterAddress(address) {
+    async openLanguageDropdown() {
         try {
-            log.logInfo(`Entering address: ${address}`, 'Register Page');
-            await this.setValueToElement(this.inputAddress, address);
+            logInfo('Opening language selection dropdown');
+            await this.clickElement(this.multiSelectDropdown); // Click to open the dropdown
+            logInfo('Dropdown opened successfully');
         } catch (error) {
-            log.logError(`Failed to enter address: ${address}`, 'Register Page');
-            throw new Error(`Error entering address: ${error.message}`);
+            logError('Failed to open the dropdown: ' + error);
+            throw new Error('Failed to open the language selection dropdown');
         }
     }
+
+     /**
+     * @description clsose the multi-select dropdown.
+     * @throws {Error} Throws error if the dropdown cannot be closed.
+     */
+     async closeLanguageDropDown() {
+        try {
+            logInfo('closing language selection dropdown');
+            await this.clickElement(this.languageLabel); 
+            logInfo('Dropdown closed successfully');
+        } catch (error) {
+            logError('Failed to close the dropdown: ' + error);
+            throw new Error('Failed to close the language selection dropdown');
+        }
+    }
+
+
+ /**
+ * @description Selects a language from the dropdown.
+ * @param {string} languageToSelect - The language to select.
+ * @throws {Error} Throws error if the language is not found.
+ */
+  async selectLanguage(languageToSelect) {
+    try {
+        logInfo(`Attempting to select language: ${languageToSelect}`);
+        await this.openLanguageDropdown();  // Open the dropdown
+        await this.scrollElementIntoCenter(this.languageListContainer);
+        const langSelector = $(this.LanguageItem.replace("{language}", languageToSelect));
+                try {
+                    // Scroll the language option into view
+                    await this.scrollWithinContainer(this.languageListContainer, langSelector);
+                  
+                } catch (scrollError) {
+                    logError('Error scrolling to the language: ' + scrollError);
+                    throw new Error(`Error scrolling to ${langSelector}`);
+                }
+
+                // Click the language
+                await this.clickElement(langSelector)
+                
+              
+            
+        } catch (error) {
+        logError(`Error selecting language ${languageToSelect}: ` + error);
+        throw error;  // Re-throw error after logging
+    }
+    await this.closeLanguageDropDown();
+}
+    /**
+     * @description Gets the currently selected language from the dropdown.
+     * @returns {string} The selected language.
+     */
+    async getSelectedLanguage() {
+        try {
+            const selectedLanguage = await this.getTextFromElement(this.multiSelectDropdown);
+            logInfo(`Currently selected language: ${selectedLanguage}`);
+            return selectedLanguage;
+        } catch (error) {
+            logError('Error getting the selected language: ' + error);
+            throw new Error('Error retrieving the selected language');
+        }
+    }
+
+   /**
+ * @description Selects a skill from a dropdown by its visible text.
+ * @param {string} value - The visible text of the skill to be selected from the dropdown.
+ * @throws {Error} Throws error if the selection fails or if any issue occurs while selecting the skill.
+ */
+async selectSkills(value) {
+    
+    try {
+        // Log the action being performed
+        logInfo(`Attempting to select skill with visible text: ${value}`);
+        
+        // Ensure the select element is available and select the option by visible text
+        await this.SelectElementByVisibleText(this.ddSkills,value);
+        
+        // Log success after selecting the skill
+        logInfo(`Successfully selected the skill with visible text: ${value}`);
+    } catch (error) {
+        // Log the error and rethrow it for further handling
+        logError(`Error selecting skill with visible text: ${value}. Error: ${error.message}`);
+        throw new Error(`Failed to select skill with value "${value}": ${error.message}`);
+    }
+}
 
     /**
      * @description Enter the email in the email input field.
@@ -125,10 +233,10 @@ class RegisterPage extends actionhelper {
      */
     async enterEmail(email) {
         try {
-            log.logInfo(`Entering email: ${email}`, 'Register Page');
+            logInfo(`Entering email: ${email}`, 'Register Page');
             await this.setValueToElement(this.inputEmail, email);
         } catch (error) {
-            log.logError(`Failed to enter email: ${email}`, 'Register Page');
+            logError(`Failed to enter email: ${email}`, 'Register Page');
             throw new Error(`Error entering email: ${error.message}`);
         }
     }
@@ -141,10 +249,10 @@ class RegisterPage extends actionhelper {
      */
     async enterPhoneNumber(phone) {
         try {
-            log.logInfo(`Entering phone number: ${phone}`, 'Register Page');
+            logInfo(`Entering phone number: ${phone}`, 'Register Page');
             await this.setValueToElement(this.inputPhone, phone);
         } catch (error) {
-            log.logError(`Failed to enter phone number: ${phone}`, 'Register Page');
+            logError(`Failed to enter phone number: ${phone}`, 'Register Page');
             throw new Error(`Error entering phone number: ${error.message}`);
         }
     }
@@ -156,10 +264,10 @@ class RegisterPage extends actionhelper {
      */
     async selectGenderMale() {
         try {
-            log.logInfo('Selecting gender: Male', 'Register Page');
+            logInfo('Selecting gender: Male', 'Register Page');
             await this.clickElement(this.radioBtnGenderMale);
         } catch (error) {
-            log.logError('Failed to select gender: Male', 'Register Page');
+            logError('Failed to select gender: Male', 'Register Page');
             throw new Error(`Error selecting gender: Male: ${error.message}`);
         }
     }
@@ -171,10 +279,10 @@ class RegisterPage extends actionhelper {
      */
     async selectGenderFemale() {
         try {
-            log.logInfo('Selecting gender: Female', 'Register Page');
+            logInfo('Selecting gender: Female', 'Register Page');
             await this.clickElement(this.radioBtnGenderFemale);
         } catch (error) {
-            log.logError('Failed to select gender: Female', 'Register Page');
+            logError('Failed to select gender: Female', 'Register Page');
             throw new Error(`Error selecting gender: Female: ${error.message}`);
         }
     }
@@ -187,12 +295,12 @@ class RegisterPage extends actionhelper {
      */
     async selectHobbies(hobbies) {
         try {
-            log.logInfo('Selecting hobbies', 'Register Page');
+            logInfo('Selecting hobbies', 'Register Page');
             if (hobbies.includes('Cricket')) await this.clickElement(this.hobbiesCheckBoxCricket);
             if (hobbies.includes('Movies')) await this.clickElement(this.hobbiesCheckBoxMovies);
             if (hobbies.includes('Hockey')) await this.clickElement(this.hobbiesCheckBoxHockey);
         } catch (error) {
-            log.logError(`Failed to select hobbies: ${hobbies.join(', ')}`, 'Register Page');
+            logError(`Failed to select hobbies: ${hobbies.join(', ')}`, 'Register Page');
             throw new Error(`Error selecting hobbies: ${error.message}`);
         }
     }
@@ -205,10 +313,10 @@ class RegisterPage extends actionhelper {
      */
     async selectCountry(country) {
         try {
-            log.logInfo(`Selecting country: ${country}`, 'Register Page');
+            logInfo(`Selecting country: ${country}`, 'Register Page');
             await this.setValueToElement(this.dropdownCountry, country);
         } catch (error) {
-            log.logError(`Failed to select country: ${country}`, 'Register Page');
+            logError(`Failed to select country: ${country}`, 'Register Page');
             throw new Error(`Error selecting country: ${error.message}`);
         }
     }
@@ -221,10 +329,10 @@ class RegisterPage extends actionhelper {
      */
     async uploadFile(filePath) {
         try {
-            log.logInfo(`Uploading file: ${filePath}`, 'Register Page');
+            logInfo(`Uploading file: ${filePath}`, 'Register Page');
             await this.setValueToElement(this.btnChooseFile, filePath);
         } catch (error) {
-            log.logError(`Failed to upload file: ${filePath}`, 'Register Page');
+            logError(`Failed to upload file: ${filePath}`, 'Register Page');
             throw new Error(`Error uploading file: ${error.message}`);
         }
     }
@@ -236,10 +344,10 @@ class RegisterPage extends actionhelper {
      */
     async clickSubmitButton() {
         try {
-            log.logInfo('Clicking submit button', 'Register Page');
+            logInfo('Clicking submit button', 'Register Page');
             await this.clickElement(this.btnSubmit);
         } catch (error) {
-            log.logError('Failed to click submit button', 'Register Page');
+            logError('Failed to click submit button', 'Register Page');
             throw new Error(`Error clicking submit button: ${error.message}`);
         }
     }

@@ -69,7 +69,7 @@ export const config = {
         browserName: 'chrome',// or "firefox", "microsoftedge", "safari"
 
         'goog:chromeOptions': {
-            args: ['--headless', '--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage', '--window-size=1920,1080', '--ignore-certificate-errors']
+            args: ['--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage', '--window-size=1920,1080', '--ignore-certificate-errors']
         },
     }],
 
@@ -115,6 +115,7 @@ export const config = {
     //
     // Default request retries count
     connectionRetryCount: 3,
+    assertionTimeout: 5000, 
     //
     // Test runner services
     // Services take over a specific job you don't want to take care of. They enhance
@@ -168,7 +169,7 @@ export const config = {
     // See the full list at http://mochajs.org/
     mochaOpts: {
         ui: 'bdd',
-        timeout: 80000
+        timeout: 60000
     },
 
     //

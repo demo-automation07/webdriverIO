@@ -1,7 +1,10 @@
 import { $ } from '@wdio/globals' 
+import actionhelper from '../../helpers/action.helper.js'
+import {logError,logInfo} from '../../helpers/logger.helper.js'
 
-class LandingPage {
 
+class LandingPage extends actionhelper{
+    //locators for landing page
     get emailField() {
         return $('input#email');
     }
@@ -26,31 +29,87 @@ class LandingPage {
         return $('button[type="submit"]');
     }
 
+    
+    /**
+     * Opens the Facebook login page
+     * @throws {Error} Throws an error if there is an issue loading the page.
+     */
     async open() {
-        await browser.url('https://www.facebook.com/');
-        await browser.pause(3000);
+        try {
+            logInfo('Navigating to Facebook login page');  // Log navigation attempt
+            await browser.url('https://www.facebook.com/');
+            await browser.pause(3000);  // Wait for the page to load
+            logInfo('Successfully navigated to Facebook login page');  // Log successful navigation
+        } catch (error) {
+            logError('Error navigating to Facebook login page', error);  // Log error if navigation fails
+            throw new Error('Failed to open Facebook login page');  // Throw error to stop further execution
+        }
     }
 
+    /**
+     * Logs in to Facebook using the provided email and password
+     * @param {string} email - The email to use for login.
+     * @param {string} password - The password to use for login.
+     * @throws {Error} Throws an error if login fails.
+     */
     async login(email, password) {
-        await this.emailField.setValue(email);
-        await this.passwordField.setValue(password);
-        await this.loginButton.click();
-        await browser.pause(5000);
+        try {
+            logInfo(`Attempting to log in with email: ${email}`);  // Log the email used for login
+            // Set values to email and password fields
+            await this.setValueToElement(this.emailField, email);
+            await this.setValueToElement(this.passwordField, password);
+            // Click the login button
+            await this.clickElement(this.loginButton);
+            logInfo('Successfully clicked login button');  // Log success message
+        } catch (error) {
+            logError('Error during login', error);  // Log any errors encountered during login
+            throw new Error('Login failed');  // Throw error if login fails
+        }
     }
 
+    /**
+     * Clicks the 'Forgot Password' link to begin password recovery
+     * @throws {Error} Throws an error if the link cannot be clicked.
+     */
     async clickForgotPassword() {
-        await this.forgotPasswordLink.click();
-        await browser.pause(5000);
+        try {
+            logInfo('Clicking the "Forgot Password" link');  // Log attempt to click the forgot password link
+            await this.clickElement(this.forgotPasswordLink);
+            logInfo('Successfully clicked "Forgot Password" link');  // Log success message
+        } catch (error) {
+            logError('Error clicking "Forgot Password" link', error);  // Log error if link click fails
+            throw new Error('Failed to click "Forgot Password" link');  // Throw error to stop further execution
+        }
     }
 
+    /**
+     * Clicks the 'Try Another Way' button in the password recovery flow
+     * @throws {Error} Throws an error if the button cannot be clicked.
+     */
     async clickTryAnotherWay() {
-        await this.tryAnotherWayButton.click();
-        await browser.pause(5000);
+        try {
+            logInfo('Clicking the "Try Another Way" button');  // Log attempt to click the try another way button
+            await this.clickElement(this.tryAnotherWayButton);
+            logInfo('Successfully clicked "Try Another Way" button');  // Log success message
+        } catch (error) {
+            logError('Error clicking "Try Another Way" button', error);  // Log error if button click fails
+            throw new Error('Failed to click "Try Another Way" button');  // Throw error to stop further execution
+        }
     }
 
+    /**
+     * Clicks the 'Continue' button, typically after entering recovery information
+     * @throws {Error} Throws an error if the continue button cannot be clicked.
+     */
     async submit() {
-        await this.continueButton.click();
-        await browser.pause(10000);
+        try {
+            logInfo('Clicking the "Continue" button');  // Log attempt to click the continue button
+            await this.clickElement(this.continueButton);
+            logInfo('Successfully clicked "Continue" button');  // Log success message
+        } catch (error) {
+            logError('Error clicking "Continue" button', error);  // Log error if button click fails
+            throw new Error('Failed to click "Continue" button');  // Throw error to stop further execution
+        }
     }
 }
 

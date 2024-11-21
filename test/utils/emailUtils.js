@@ -1,14 +1,17 @@
 import imaps from 'imap-simple';
-import { simpleParser } from 'mailparser';
 import {logError,logInfo} from '../helpers/logger.helper.js';
+import { getStagingEnv } from '../utils/envParam.js'
+import configData from '../config/config.json' assert { type: 'json' };
+
+const data = configData[getStagingEnv()].facebooksite;
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 const config = {
     imap: {
-        user: 'automationdemo07@gmail.com',
-        password: 'gczz meqt lvai axgr', 
-        host: 'imap.gmail.com',
-        port: 993,
+        user: data.username,
+        password: data.password, 
+        host: data.imap.host,
+        port: data.imap.port,
         tls: true,
         authTimeout: 3000,
     },

@@ -5,6 +5,45 @@ import { logError, logInfo } from './logger.helper';
 export default class ActionHelper {
 
     /**
+ * @description Opens the provided URL in the browser.
+ * @param {string} url - The URL to open in the browser.
+ * @throws {Error} Throws an error if the URL is invalid or the page cannot be opened.
+ */
+    async openUrl(url) {
+        try {
+            // Check if the provided URL is a valid string
+            if (typeof url !== 'string' || !url.trim()) {
+                logError('Invalid URL provided. Please provide a valid URL string.')
+                throw new Error('Invalid URL provided. Please provide a valid URL string.');
+            }
+
+            // Open the URL in the browser
+            await browser.url(url);  // WebDriverIO's built-in method to navigate to a URL
+            logInfo(`Successfully opened the URL: ${url}`);
+            
+
+        } catch (error) {
+            // Log the error if there is an issue with opening the URL
+            logError(`Error opening the URL: ${error.message}`);
+            throw new Error(`Failed to open URL: ${error.message}`);
+        }
+    }
+
+    /**
+     * @description Maximizes the browser window
+     * @throws {Error} Throws an error if the browser window fails to maximize.
+     */
+    async maximizeBrowserWindow() {
+        try {
+            await browser.maximizeWindow();  // Maximize the window
+            logInfo('Browser window maximized.');
+        } catch (error) {
+            logError(`Error maximizing browser window: ${error}`);
+            throw error;  // Re-throw the error after logging it
+        }
+    }
+
+    /**
      * @description Clicks the provided element after ensuring it's clickable.
      * @param {Webelement} element - The web element to be clicked.
      * @throws {Error} Throws error if the element is not clickable or any other issue occurs during the click action.
@@ -16,7 +55,7 @@ export default class ActionHelper {
             await this.highLightElement(element);
             await element.click();
         } catch (error) {
-            console.error(`Error clicking element: ${error}`);
+            logError(`Error clicking element: ${error}`);
             throw error;  // Re-throw error after logging it
         }
     }
@@ -33,7 +72,7 @@ export default class ActionHelper {
             await this.highLightElement(element);
             await element.doubleClick();
         } catch (error) {
-            console.error(`Error double-clicking element: ${error}`);
+            logError(`Error double-clicking element: ${error}`);
             throw error;
         }
     }
@@ -51,7 +90,7 @@ export default class ActionHelper {
             await this.highLightElement(element);
             await element.setValue(value);
         } catch (error) {
-            console.error(`Error setting value to element: ${error}`);
+            logError(`Error setting value to element: ${error}`);
             throw error;
         }
     }
@@ -67,7 +106,7 @@ export default class ActionHelper {
             await this.waitForElementVisible(element);
             await element.clearValue();
         } catch (error) {
-            console.error(`Error clearing value from element: ${error}`);
+            logError(`Error clearing value from element: ${error}`);
             throw error;
         }
     }
@@ -82,7 +121,7 @@ export default class ActionHelper {
             await this.waitForExist(element);
             await element.scrollIntoView();
         } catch (error) {
-            console.error(`Error scrolling to element: ${error}`);
+            logError(`Error scrolling to element: ${error}`);
             throw error;
         }
     }
@@ -98,7 +137,7 @@ export default class ActionHelper {
             await element.scrollIntoView();
             return await element.click();
         } catch (error) {
-            console.error(`Error scrolling and clicking element: ${error}`);
+            logError(`Error scrolling and clicking element: ${error}`);
             throw error;
         }
     }
@@ -114,7 +153,7 @@ export default class ActionHelper {
             await this.waitForExist(element);
             return await element.scrollIntoView({ block: 'center', inline: 'center' });
         } catch (error) {
-            console.error(`Error scrolling element to center: ${error}`);
+            logError(`Error scrolling element to center: ${error}`);
             throw error;
         }
     }
@@ -130,7 +169,7 @@ export default class ActionHelper {
             await this.waitForExist(element);
             return await element.scrollIntoView({ block: 'center', inline: 'nearest' });
         } catch (error) {
-            console.error(`Error scrolling element to nearest: ${error}`);
+            logError(`Error scrolling element to nearest: ${error}`);
             throw error;
         }
     }
@@ -181,7 +220,7 @@ export default class ActionHelper {
                 }
             );
         } catch (error) {
-            console.error(`Error waiting for element to be visible: ${error}`);
+            logError(`Error waiting for element to be visible: ${error}`);
             throw error;
         }
     }
@@ -195,7 +234,7 @@ export default class ActionHelper {
         try {
             await browser.waitUntil(() => element.isClickable());
         } catch (error) {
-            console.error(`Error waiting for element to be clickable: ${error}`);
+            logError(`Error waiting for element to be clickable: ${error}`);
             throw error;
         }
     }
@@ -207,7 +246,7 @@ export default class ActionHelper {
  * @param {string} [errorMessage] - Optional custom error message.
  * @throws {Error} Throws error if the element does not exist within the timeout.
  */
-async waitForExist(element, timeout = 5000, errorMessage = 'Element not found within the timeout') {
+async waitForExist(element, timeout = 6000, errorMessage = 'Element not found within the timeout') {
     try {
         // Wait for the element to exist within the specified timeout
         await element.waitForExist({ timeout: timeout });
@@ -234,7 +273,7 @@ async waitForExist(element, timeout = 5000, errorMessage = 'Element not found wi
         try {
             await element.waitForExist({ reverse: true, timeout: 10000 });
         } catch (error) {
-            console.error(`Error waiting for cancel loading element: ${error}`);
+            logError(`Error waiting for cancel loading element: ${error}`);
             throw error;
         }
     }
@@ -248,7 +287,7 @@ async waitForExist(element, timeout = 5000, errorMessage = 'Element not found wi
         try {
             await element.waitForDisplayed({ reverse: true });
         } catch (error) {
-            console.error(`Error waiting for element to not be displayed: ${error}`);
+            logError(`Error waiting for element to not be displayed: ${error}`);
             throw error;
         }
     }
@@ -263,7 +302,7 @@ async waitForExist(element, timeout = 5000, errorMessage = 'Element not found wi
         try {
             return browser.switchToFrame(element);
         } catch (error) {
-            console.error(`Error switching to iframe: ${error}`);
+            logError(`Error switching to iframe: ${error}`);
             throw error;
         }
     }
@@ -278,7 +317,7 @@ async waitForExist(element, timeout = 5000, errorMessage = 'Element not found wi
         try {
             return browser.switchWindow(titleOrUrl);
         } catch (error) {
-            console.error(`Error switching back to window via title or URL: ${error}`);
+            logError(`Error switching back to window via title or URL: ${error}`);
             throw error;
         }
     }
@@ -292,7 +331,7 @@ async waitForExist(element, timeout = 5000, errorMessage = 'Element not found wi
         try {
             return await browser.getTitle();
         } catch (error) {
-            console.error(`Error getting page title: ${error}`);
+            logError(`Error getting page title: ${error}`);
             throw error;
         }
     }
@@ -306,7 +345,7 @@ async waitForExist(element, timeout = 5000, errorMessage = 'Element not found wi
         try {
             return await browser.closeWindow();
         } catch (error) {
-            console.error(`Error closing browser: ${error}`);
+            logError(`Error closing browser: ${error}`);
             throw error;
         }
     }
@@ -322,7 +361,7 @@ async waitForExist(element, timeout = 5000, errorMessage = 'Element not found wi
                 arg.style.border = "2px solid red";
             }, await element);
         } catch (error) {
-            console.error(`Error highlighting element: ${error}`);
+            logError(`Error highlighting element: ${error}`);
             throw error;
         }
     }
@@ -338,7 +377,7 @@ async waitForExist(element, timeout = 5000, errorMessage = 'Element not found wi
             await this.waitForExist(element);
             return await element.getText();
         } catch (error) {
-            console.error(`Error getting text from element: ${error}`);
+            logError(`Error getting text from element: ${error}`);
             throw error;
         }
     }
@@ -356,7 +395,7 @@ async waitForExist(element, timeout = 5000, errorMessage = 'Element not found wi
             await this.waitForExist(element);
             await element.selectByVisibleText(text);
         } catch (error) {
-            console.error(`Error selecting element from value: ${error}`);
+            logError(`Error selecting element from value: ${error}`);
             throw error;
         }
     }
@@ -374,7 +413,7 @@ async waitForExist(element, timeout = 5000, errorMessage = 'Element not found wi
             await this.waitForExist(element);
             await element.selectByValue(value);
         } catch (error) {
-            console.error(`Error selecting element from value: ${error}`);
+            logError(`Error selecting element from value: ${error}`);
             throw error;
         }
     }
@@ -391,7 +430,7 @@ async waitForExist(element, timeout = 5000, errorMessage = 'Element not found wi
             await this.waitForExist(element);
             return await element.getAttribute('value');
         } catch (error) {
-            console.error(`Error getting value attribute from element: ${error}`);
+            logError(`Error getting value attribute from element: ${error}`);
             throw error;
         }
     }
@@ -407,7 +446,7 @@ async waitForExist(element, timeout = 5000, errorMessage = 'Element not found wi
                 document.querySelector(elSelector).scrollIntoView();
             }, selector);
         } catch (error) {
-            console.error(`Error scrolling to element: ${error}`);
+            logError(`Error scrolling to element: ${error}`);
             throw error;
         }
     }
@@ -422,7 +461,7 @@ async waitForExist(element, timeout = 5000, errorMessage = 'Element not found wi
         try {
             return await element.isExisting();
         } catch (error) {
-            console.error(`Error checking presence of element: ${error}`);
+            logError(`Error checking presence of element: ${error}`);
             throw error;
         }
     }
@@ -437,7 +476,7 @@ async waitForExist(element, timeout = 5000, errorMessage = 'Element not found wi
         try {
             return await element.getAttribute('aria-checked');
         } catch (error) {
-            console.error(`Error getting 'aria-checked' attribute: ${error}`);
+            logError(`Error getting 'aria-checked' attribute: ${error}`);
             throw error;
         }
     }
@@ -453,7 +492,7 @@ async waitForExist(element, timeout = 5000, errorMessage = 'Element not found wi
             await browser.keys([Key.Ctrl, 'a']);
             await browser.keys([Key.Backspace]);
         } catch (error) {
-            console.error(`Error clearing value with keys: ${error}`);
+            logError(`Error clearing value with keys: ${error}`);
             throw error;
         }
     }
@@ -469,12 +508,12 @@ async waitForExist(element, timeout = 5000, errorMessage = 'Element not found wi
             const path = `./test/utils/jsonfiles/${filePath}`;
             fs.writeFile(path, JSON.stringify(fileObject, null, 2), function writeJSON(err) {
                 if (err) {
-                    console.error(`Error writing to JSON file: ${err}`);
+                    logError(`Error writing to JSON file: ${err}`);
                     throw err;
                 }
             });
         } catch (error) {
-            console.error(`Error updating JSON file: ${error}`);
+            logError(`Error updating JSON file: ${error}`);
             throw error;
         }
     }
@@ -487,9 +526,9 @@ async waitForExist(element, timeout = 5000, errorMessage = 'Element not found wi
     try {
         await this.waitForElementToBeVisible(iframe);
         await browser.switchToFrame(iframe);
-        console.log('Successfully switched to iframe.');
+        logInfo('Successfully switched to iframe.');
     } catch (error) {
-        console.error('Error while switching to iframe:', error);
+        logError('Error while switching to iframe:', error);
         throw new Error('Failed to switch to iframe.');
     }
 }
@@ -500,9 +539,9 @@ async waitForExist(element, timeout = 5000, errorMessage = 'Element not found wi
 async switchToMainFrame() {
     try {
         await browser.switchToParentFrame();
-        console.log('Successfully switched back to the main document.');
+        logInfo('Successfully switched back to the main document.');
     } catch (error) {
-        console.error('Error while switching back to the main document:', error);
+        logError('Error while switching back to the main document:', error);
         throw new Error('Failed to switch to main frame.');
     }
 }
@@ -514,9 +553,9 @@ async switchToMainFrame() {
 async pressKey(key) {
     try {
         await browser.keys([key]);
-        console.log(`Successfully pressed the key: ${key}`);
+        logInfo(`Successfully pressed the key: ${key}`);
     } catch (error) {
-        console.error(`Error while pressing the key ${key}:`, error);
+        logError(`Error while pressing the key ${key}:`, error);
         throw new Error(`Failed to press key ${key}.`);
     }
 }
@@ -536,9 +575,9 @@ async waitForTextInElement(element, text, timeout = 5000) {
                 timeoutMsg: `Expected text "${text}" not found within ${timeout} ms`
             }
         );
-        console.log(`Text "${text}" found in element.`);
+        logInfo(`Text "${text}" found in element.`);
     } catch (error) {
-        console.error(`Error while waiting for text "${text}" in element:`, error);
+        logError(`Error while waiting for text "${text}" in element:`, error);
         throw new Error(`Failed to find text "${text}" within ${timeout} ms.`);
     }
 }
@@ -557,9 +596,9 @@ async waitForUrlContains(partialUrl, timeout = 5000) {
                 timeoutMsg: `URL containing "${partialUrl}" not loaded within ${timeout} ms`
             }
         );
-        console.log(`URL containing "${partialUrl}" loaded successfully.`);
+        logInfo(`URL containing "${partialUrl}" loaded successfully.`);
     } catch (error) {
-        console.error(`Error while waiting for URL containing "${partialUrl}":`, error);
+        logError(`Error while waiting for URL containing "${partialUrl}":`, error);
         throw new Error(`Failed to load URL containing "${partialUrl}" within ${timeout} ms.`);
     }
 }
@@ -583,9 +622,9 @@ async waitForFileDownload(fileName, downloadDir = './downloads', timeout = 10000
                 timeoutMsg: `File "${fileName}" not downloaded within ${timeout} ms`
             }
         );
-        console.log(`File "${fileName}" downloaded successfully.`);
+        logInfo(`File "${fileName}" downloaded successfully.`);
     } catch (error) {
-        console.error(`Error while waiting for file download "${fileName}":`, error);
+        logError(`Error while waiting for file download "${fileName}":`, error);
         throw new Error(`Failed to download file "${fileName}" within ${timeout} ms.`);
     }
 }
@@ -603,13 +642,13 @@ async captureScreenshot(fileName, outputDir = './screenshots') {
     try {
         if (!fs.existsSync(outputDir)) {
             fs.mkdirSync(outputDir, { recursive: true });
-            console.log(`Created screenshot directory: ${outputDir}`);
+            logInfo(`Created screenshot directory: ${outputDir}`);
         }
 
         await browser.saveScreenshot(filePath);
-        console.log(`Screenshot saved at ${filePath}`);
+        logInfo(`Screenshot saved at ${filePath}`);
     } catch (error) {
-        console.error(`Error while capturing screenshot:`, error);
+        logError(`Error while capturing screenshot:`, error);
         throw new Error('Failed to capture screenshot.');
     }
 }
@@ -622,11 +661,59 @@ async captureScreenshot(fileName, outputDir = './screenshots') {
 async waitForElementToBeVisible(element, timeout = 5000) {
     try {
         await element.waitForDisplayed({ timeout });
-        console.log(`Element is visible.`);
+        logInfo(`${element} Element is visible.`);
     } catch (error) {
-        console.error('Error while waiting for element to be visible:', error);
+        logError('Error while waiting for element to be visible:', error);
         throw new Error(`Failed to wait for element to be visible within ${timeout} ms.`);
     }
 }
 
+/**
+ * @description Maximizes the browser window or sets a custom size.
+ * If width and height are provided, the window will be resized to those dimensions.
+ * If no width and height are provided, the window will be maximized.
+ * 
+ * @param {number} [width] - The width of the browser window (in pixels). Optional.
+ * @param {number} [height] - The height of the browser window (in pixels). Optional.
+ * 
+ * @throws {Error} Throws an error if the browser window cannot be resized or maximized.
+ */
+async maximizeOrSetWindowSize(width, height) {
+    try {
+        // If width and height are provided, resize the browser window to the specified dimensions
+        if (width && height) {
+            await browser.setWindowSize(width, height);  // Set custom window size
+            logInfo(`Browser window resized to ${width}x${height}.`);
+        } else {
+            // If no dimensions are provided, maximize the window
+            browser.maximizeWindow();
+            logInfo('Browser window maximized.');
+        }
+    } catch (error) {
+        // Log and re-throw the error if resizing or maximizing fails
+        logError(`Error resizing or maximizing browser window: ${error}`);
+        throw error;
+    }
+}
+/**
+ * @description Waits for the browser to load completely before executing further steps.
+ * This function waits for the page's readyState to be "complete", indicating that the page has finished loading.
+ */
+async waitForPageToLoad() {
+    try {
+       // Wait for the body element to be present (i.e., page loaded)
+       await browser.waitUntil(async () => {
+            const body = await $('body');  // You can replace this with another element
+            return body.isDisplayed();  // Check if the body is displayed, meaning the page loaded
+        }, {
+            timeout: 10000,  // Wait up to 10 seconds
+            timeoutMsg: 'Page did not load within 10 seconds',
+            interval: 500  // Check every 500ms
+        });
+        logInfo('Page has loaded successfully.');
+    } catch (error) {
+        logError(`Error waiting for page to load: ${error}`);
+        throw error;  // Re-throw the error after logging it
+    }
+}
 }

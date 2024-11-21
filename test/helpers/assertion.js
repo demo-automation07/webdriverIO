@@ -1,7 +1,8 @@
 import { expect } from 'chai'; 
 import {logInfo,logError} from './logger.helper.js';
+import ActionHelper from './action.helper.js';
 
-class assertion{
+class assertion extends ActionHelper{
 
         /**
          * Custom assertion to check if the page title matches the expected value
@@ -9,6 +10,7 @@ class assertion{
          * @param {string} expectedTitle - The expected title of the page
          */
         async assertPageTitle(expectedTitle) {
+            await this.waitForPageToLoad();
             const actualTitle = await browser.getTitle();
             const message = `Checking if page title is "${expectedTitle}" (Actual: "${actualTitle}")`;
             logInfo(message, 'assertion')
@@ -56,6 +58,7 @@ class assertion{
          * @param {string} expectedUrl - The expected URL value
          */
         async assertCurrentUrl(expectedUrl) {
+            await this.waitForPageToLoad();
             const actualUrl = await browser.getUrl();
             const message = `Checking if current URL is "${expectedUrl}" (Actual: "${actualUrl}")`;
             logInfo(message, 'assertion');

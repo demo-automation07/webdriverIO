@@ -9,70 +9,74 @@
         "password": "2712cb30b46e084af1002e5208a7c006",
         "iv":"c2cf2832322ee0ce02b741d077b48bfa"
       },
-      "facebook": {
+      "facebooksite": {
         "url": "https://www.facebook.com/",
-        "username": "saranyatestemailv@gmail.com",
-        "password": "mbxm iudw btxl kduw"
+        "username": "automationdemo07@gmail.com",
+        "password": "gczz meqt lvai axgr",
+        "imap":{
+          "host": "imap.gmail.com",
+          "port": 993
+        }
       }
     },
     "dev": {
       "demosite": {
-        "loginUrl": "https://dev.demosite.com/login",
-        "homeUrl": "https://dev.demosite.com/home",
-        "username": "devDemositeUser",
-        "password": "devDemositePassword123"
+        "url": "https://demo.automationtesting.in/"
       },
-      "practiceSite": {
-        "loginUrl": "https://dev.practicesite.com/login",
-        "homeUrl": "https://dev.practicesite.com/home",
-        "username": "devPracticeUser",
-        "password": "devPracticePassword123"
+      "practicesite": {
+        "url": "https://practicetestautomation.com/practice-test-login/",
+        "username": "student",
+        "password": "2712cb30b46e084af1002e5208a7c006",
+        "iv":"c2cf2832322ee0ce02b741d077b48bfa"
       },
-      "facebook": {
-        "loginUrl": "https://dev.facebook.com/login",
-        "homeUrl": "https://dev.facebook.com/home",
-        "username": "devFacebookUser",
-        "password": "devFacebookPassword123"
+      "facebooksite": {
+        "url": "https://www.facebook.com/",
+        "username": "automationdemo07@gmail.com",
+        "password": "gczz meqt lvai axgr",
+        "imap":{
+          "host": "imap.gmail.com",
+          "port": 993
+        }
       }
     },
     "prod": {
       "demosite": {
-        "loginUrl": "https://www.demosite.com/login",
-        "homeUrl": "https://www.demosite.com/home",
-        "username": "prodDemositeUser",
-        "password": "prodDemositePassword123"
+        "url": "https://demo.automationtesting.in/"
       },
-      "practiceSite": {
-        "loginUrl": "https://www.practicesite.com/login",
-        "homeUrl": "https://www.practicesite.com/home",
-        "username": "prodPracticeUser",
-        "password": "prodPracticePassword123"
+      "practicesite": {
+        "url": "https://practicetestautomation.com/practice-test-login/",
+        "username": "student",
+        "password": "2712cb30b46e084af1002e5208a7c006",
+        "iv":"c2cf2832322ee0ce02b741d077b48bfa"
       },
-      "facebook": {
-        "loginUrl": "https://www.facebook.com/login",
-        "homeUrl": "https://www.facebook.com/home",
-        "username": "prodFacebookUser",
-        "password": "prodFacebookPassword123"
+      "facebooksite": {
+        "url": "https://www.facebook.com/",
+        "username": "automationdemo07@gmail.com",
+        "password": "gczz meqt lvai axgr",
+        "imap":{
+          "host": "imap.gmail.com",
+          "port": 993
+        }
       }
     },
     "uat": {
       "demosite": {
-        "loginUrl": "https://uat.demosite.com/login",
-        "homeUrl": "https://uat.demosite.com/home",
-        "username": "uatDemositeUser",
-        "password": "uatDemositePassword123"
+        "url": "https://demo.automationtesting.in/"
       },
-      "practiceSite": {
-        "loginUrl": "https://uat.practicesite.com/login",
-        "homeUrl": "https://uat.practicesite.com/home",
-        "username": "uatPracticeUser",
-        "password": "uatPracticePassword123"
+      "practicesite": {
+        "url": "https://practicetestautomation.com/practice-test-login/",
+        "username": "student",
+        "password": "2712cb30b46e084af1002e5208a7c006",
+        "iv":"c2cf2832322ee0ce02b741d077b48bfa"
       },
-      "facebook": {
-        "loginUrl": "https://uat.facebook.com/login",
-        "homeUrl": "https://uat.facebook.com/home",
-        "username": "uatFacebookUser",
-        "password": "uatFacebookPassword123"
+      "facebooksite": {
+        "url": "https://www.facebook.com/",
+        "username": "automationdemo07@gmail.com",
+        "password": "gczz meqt lvai axgr",
+        "imap":{
+          "host": "imap.gmail.com",
+          "port": 993
+        }
       }
     }
   }

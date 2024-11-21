@@ -10,6 +10,7 @@ const path = require('path');
 
 
 
+
 export const config = {
     //
     // ====================
@@ -35,6 +36,23 @@ export const config = {
     specs: [
         './test/specs/**/*.js'
     ],
+
+    suites : {
+        TC_smoke : [
+            './test/specs/automationdemosite/test.registration.js',
+            './test/specs/automationdemosite/test.registrationMandatory.js'
+        ],
+        TC_regresion : [
+            './test/specs/automationdemosite/test.registration.js',
+            './test/specs/automationdemosite/test.registrationMandatory.js',
+            './test/specs/practiceautomation/test.login.js',
+             './test/specs/facebook/test.forgotpassword.js'
+        ],
+        TC_end2end :[
+            './test/specs/facebook/test.forgotpassword.js',
+            './test/specs/practiceautomation/test.login.js'
+        ]
+    },
     // Patterns to exclude.
     exclude: [
         // 'path/to/excluded/files'
@@ -55,7 +73,7 @@ export const config = {
     // and 30 processes will get spawned. The property handles how many capabilities
     // from the same test should run tests.
     //
-    maxInstances: 10,
+    // maxInstances: 10,
     //
     // If you have trouble getting all important capabilities together, check out the
     // Sauce Labs platform configurator - a great tool to configure your capabilities:
@@ -66,12 +84,25 @@ export const config = {
        
         maxInstances: 1,
         //
-        browserName: 'chrome',// or "firefox", "microsoftedge", "safari"
+        browserName: 'chrome',
 
         'goog:chromeOptions': {
             args: ['--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage', '--window-size=1920,1080', '--ignore-certificate-errors']
         },
-    }],
+    },
+    // {
+    //     browserName: 'firefox', // Use Firefox browser
+    //     "moz:firefoxOptions": {
+    //         args: ['-headless']
+    //     }
+    // },
+    // {
+    //     browserName: 'safari', // Use Safari browser
+    //     'safari.options': {
+    //         technologyPreview: false
+    //     }
+    // }
+    ],
 
     //
     // ===================
@@ -104,7 +135,7 @@ export const config = {
     // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
     // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
     // gets prepended directly.
-    // baseUrl: 'http://localhost:8080',
+    //baseUrl:  ,
     //
     // Default timeout for all waitFor* commands.
     waitforTimeout: 100000,
@@ -121,7 +152,10 @@ export const config = {
     // Services take over a specific job you don't want to take care of. They enhance
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
-    // services: [],
+    services: ['chromedriver', 
+                // 'geckodriver', 
+                // 'safaridriver'
+              ],
     //
     // Framework you want to run your specs with.
     // The following are supported: Mocha, Jasmine, and Cucumber
@@ -186,6 +220,8 @@ export const config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      */
     // onPrepare: function (config, capabilities) {
+       
+        
     // },
     /**
      * Gets executed before a worker process is spawned and can be used to initialize specific service
@@ -215,8 +251,11 @@ export const config = {
      * @param {Array.<String>} specs List of spec file paths that are to be run
      * @param {string} cid worker id (e.g. 0-0)
      */
-    // beforeSession: function (config, capabilities, specs, cid) {
+     // Hook before session starts to handle environment-specific configurations
+    //  beforeSession: async function (config, capabilities, specs, cid) {
+       
     // },
+    
     /**
      * Gets executed before test execution begins. At this point you can access to all global
      * variables like `browser`. It is the perfect place to define custom commands.
@@ -225,11 +264,9 @@ export const config = {
      * @param {object}         browser      instance of created browser/device session
      */
     
-    before: async function (capabilities, specs) {
-        browser.url(`https://demo.automationtesting.in/`);
-        browser.maximizeWindow();
-        //await browser.pause(2000);
-    },
+    // before: async function (capabilities, specs) {
+ 
+    // },
     /**
      * Runs before a WebdriverIO command gets executed.
      * @param {string} commandName hook command name
@@ -241,12 +278,14 @@ export const config = {
      * Hook that gets executed before the suite starts
      * @param {object} suite suite details
      */
-    // beforeSuite: function (suite) {
+    // beforeSuite: async function (suite) {
+      
     // },
     /**
      * Function to be executed before a test (in Mocha/Jasmine) starts.
      */
     // beforeTest: function (test, context) {
+       
     // },
     /**
      * Hook that gets executed _before_ a hook within the suite starts (e.g. runs before calling
@@ -271,15 +310,11 @@ export const config = {
      * @param {object}  result.retries   information about spec related retries, e.g. `{ attempts: 0, limit: 0 }`
      */
     afterTest: async function (test, context, { error, result, duration, passed, retries }) {
-        if (passed) {
+        
+        if (!passed || error) {
             await browser.takeScreenshot();
         }
-         if (!passed) {
-            await browser.takeScreenshot();
-        }
-        if (error){
-            await browser.takeScreenshot();
-        }
+        
 
     },
 

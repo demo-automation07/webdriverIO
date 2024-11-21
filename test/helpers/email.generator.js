@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';  // Import faker for random data generation
-
+import { logError } from './logger.helper';
 class EmailGenerator {
 
     /**
@@ -26,6 +26,7 @@ class EmailGenerator {
             // Otherwise, use a random, more casual email format
             return `${userName.toLowerCase()}@${emailDomain}`;
         } catch (error) {
+            logError("Error generating email: " + error.message);
             throw new Error("Error generating email: " + error.message);
         }
     }
@@ -59,6 +60,7 @@ class EmailGenerator {
             const companyDomain = `${companyName.toLowerCase().replace(/\s+/g, '')}.com`;  // Clean up the company name for domain
             return `${userName.toLowerCase()}@${companyDomain}`;
         } catch (error) {
+            logError("Error generating business email: " + error.message);
             throw new Error("Error generating business email: " + error.message);
         }
     }

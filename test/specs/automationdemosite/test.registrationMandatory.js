@@ -5,6 +5,8 @@ import DataGenerator from '../../helpers/data.generator.js';
 import EmailGenerator from '../../helpers/email.generator.js';  
 import assertion from '../../helpers/assertion.js';
 import constant from '../../data/constant.js';
+import { getStagingEnv } from '../../utils/envParam.js';
+import configData from '../../config/config.json' assert { type: 'json' };
 
 describe('Register a user in automation demo application', () => {
 
@@ -22,7 +24,10 @@ describe('Register a user in automation demo application', () => {
         phoneNumber = DataGenerator.validIndianPhoneNumber(); // Generate a valid phone number
         gender = DataGenerator.validGender(); // Generate a random gender
         language = DataGenerator.validLanguage(); // You can set this as per your data source, or you can also generate it dynamically if needed
-        
+        before(async () => {
+            HomePage.openUrl(configData[getStagingEnv()].demosite.url);
+            HomePage.maximizeBrowserWindow();
+        })    
     
 
     it('User should click on skip sign-in button on the home page', async () => {     

@@ -8,8 +8,14 @@ import path from 'path';
 const filePath = path.resolve('./test/data/uploadfile/sample-pdf-file.pdf');
 import constant from '../../data/constant.js';
 import datafeed from '../../data/data.feed.json'
+import { getStagingEnv } from '../../utils/envParam.js';
+import configData from '../../config/config.json' assert { type: 'json' };
 
 describe('Register a user in automation demo application with fileupload', () => {
+    before(async () => {
+        HomePage.openUrl(configData[getStagingEnv()].demosite.url);
+        HomePage.maximizeBrowserWindow();
+    })
 
     let firstName, lastName, email, phoneNumber, gender, address, country,languageToSelect,skills,hobbies;
    
@@ -29,7 +35,7 @@ describe('Register a user in automation demo application with fileupload', () =>
         hobbies = DataGenerator.validArray(datafeed.hobbies)
 
     it('User should click on skip sign-in button on the home page', async () => {     
-        assertion.assertPageTitle(constant.demoHometitle);   
+        await assertion.assertPageTitle(constant.demoHometitle);   
         // Click the skip sign-in button
         await HomePage.clickSkipSignIn();      
         await assertion.assertCurrentUrl(constant.demoRegisterUrl)

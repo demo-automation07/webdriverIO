@@ -2,23 +2,24 @@ import { expect } from '@wdio/globals';
 import LoginPage from '../../pageobjects/practiceautomation/login.page.js';
 import assertion from '../../helpers/assertion.js';
 import {decryptPassword } from '../../utils/encrypt.js';
-import config from '../../config/config.json';
 import constant from '../../data/constant.js';
 import testdata from '../../helpers/data.generator.js';
 
-
+import { getStagingEnv } from '../../utils/envParam.js';
+import configData from '../../config/config.json' assert { type: 'json' };
 
   describe('Login Page Tests', () => {
-    const logindata = config.qa.practicesite;
-    const username = logindata.username;
-    const password = logindata.password;
-    const iv = logindata.iv;
+    const data = configData[getStagingEnv()].practicesite
+    const username = data.username;
+    const password = data.password;
+    const iv = data.iv;
     const invalidPass = testdata.invalidPassword().shortPassword;
     const decryptedPassword = decryptPassword(password, iv);
-        before(() => {
-           
-            browser.url('https://practicetestautomation.com/practice-test-login/');
-        });
+    
+    before(async () => {
+        LoginPage.openUrl(data.url);
+        LoginPage.maximizeBrowserWindow();
+    })   
     
         it('should show error message with invalid credentials', async () => {
             // Perform login with invalid credentials

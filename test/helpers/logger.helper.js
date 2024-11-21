@@ -103,6 +103,8 @@ class LoggerHelper {
     try {
       // Log warning message to the logger
       this.logger.warn(message, { label });
+      addStep(message, { label });
+      console.log(message, { label });
     } catch (error) {
       console.error("Error logging warning message:", error);
       throw new Error('Error logging warning message');
@@ -135,4 +137,8 @@ export const logInfo = (message, label) => {
 
 export const logError = (message, label) => {
   loggerHelper.logError(message, label);
+};
+
+export const logWarn = (message, label) => {
+  loggerHelper.logWarn(message, label);
 };

@@ -31,22 +31,6 @@ class LandingPage extends actionhelper{
 
     
     /**
-     * Opens the Facebook login page
-     * @throws {Error} Throws an error if there is an issue loading the page.
-     */
-    async open() {
-        try {
-            logInfo('Navigating to Facebook login page');  // Log navigation attempt
-            await browser.url('https://www.facebook.com/');
-            await browser.pause(3000);  // Wait for the page to load
-            logInfo('Successfully navigated to Facebook login page');  // Log successful navigation
-        } catch (error) {
-            logError('Error navigating to Facebook login page', error);  // Log error if navigation fails
-            throw new Error('Failed to open Facebook login page');  // Throw error to stop further execution
-        }
-    }
-
-    /**
      * Logs in to Facebook using the provided email and password
      * @param {string} email - The email to use for login.
      * @param {string} password - The password to use for login.

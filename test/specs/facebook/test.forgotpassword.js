@@ -4,11 +4,16 @@ import emailUtil from '../../utils/emailUtils.js';
 import assertion from '../../helpers/assertion.js';
 import { assert } from 'chai';
 import { logInfo } from '../../helpers/logger.helper.js';
+import { getStagingEnv } from '../../utils/envParam.js';
+import configData from '../../config/config.json' assert { type: 'json' };
 describe('validate forgot password',function(){
-
-    it('Go to facebook site and enter email and invalid password', async function() {
-        await landingPage.open();
-        await landingPage.login('automationdemo07@gmail.com', 'your_password');
+    const data = configData[getStagingEnv()].facebooksite
+    before(async () => {
+        landingPage.openUrl(data.url);
+        landingPage.maximizeBrowserWindow();
+    })
+    it('Go to facebook site and enter email and invalid password', async function() {     
+        await landingPage.login(data.username, data.password);
     });
 
     it('Click Forgot Password Link', async function() {
@@ -38,11 +43,9 @@ describe('validate forgot password',function(){
         }
     });
 
-    it('Provide OTP to textbox', async function() {
-       
+    it('Provide OTP to textbox', async function() {       
         await forgotpassword.enterOtp(global.resetCode);
-        await forgotpassword.clickContinue();
-        
+        await forgotpassword.clickContinue();        
     });
 
 })

@@ -27,6 +27,7 @@
     "imap-simple": "^5.1.0",
     "mailparser": "^3.7.1",
     "wdio-chromedriver-service": "^8.1.1",
+    "wdio-edgedriver-service": "^3.0.3",
     "wdio-geckodriver-service": "^5.0.2",
     "wdio-json-reporter": "^4.0.1",
     "wdio-safaridriver-service": "^2.1.1",

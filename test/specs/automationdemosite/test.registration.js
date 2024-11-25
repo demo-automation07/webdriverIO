@@ -5,11 +5,12 @@ import DataGenerator from '../../helpers/data.generator.js';
 import EmailGenerator from '../../helpers/email.generator.js';  
 import assertion from '../../helpers/assertion.js';
 import path from 'path'; 
-const filePath = path.resolve('./test/data/uploadfile/sample-pdf-file.pdf');
+const filePath = path.resolve('../data/uploadfile/sample-pdf-file.pdf');
 import constant from '../../data/constant.js';
-import datafeed from '../../data/data.feed.json'
+import datafeed from '../../data/data.feed.json' assert { type: 'json' };
 import { getStagingEnv } from '../../utils/envParam.js';
-import configData from '../../config/config.json' assert { type: 'json' };
+import configData from '../../../config/config.json' assert { type: 'json' };
+
 
 describe('Register a user in automation demo application with fileupload', () => {
     before(async () => {

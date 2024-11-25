@@ -1,7 +1,7 @@
 import imaps from 'imap-simple';
 import {logError,logInfo} from '../helpers/logger.helper.js';
 import { getStagingEnv } from '../utils/envParam.js'
-import configData from '../config/config.json' assert { type: 'json' };
+import configData from '../../config/config.json' assert { type: 'json' };
 
 const data = configData[getStagingEnv()].facebooksite;
 

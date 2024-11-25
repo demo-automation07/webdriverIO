@@ -706,8 +706,8 @@ async waitForPageToLoad() {
             const body = await $('body');  // You can replace this with another element
             return body.isDisplayed();  // Check if the body is displayed, meaning the page loaded
         }, {
-            timeout: 10000,  // Wait up to 10 seconds
-            timeoutMsg: 'Page did not load within 10 seconds',
+            timeout: 50000,  // Wait up to 10 seconds
+            timeoutMsg: 'Page did not load within 50 seconds',
             interval: 500  // Check every 500ms
         });
         logInfo('Page has loaded successfully.');

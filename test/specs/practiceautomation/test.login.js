@@ -6,7 +6,7 @@ import constant from '../../data/constant.js';
 import testdata from '../../helpers/data.generator.js';
 
 import { getStagingEnv } from '../../utils/envParam.js';
-import configData from '../../config/config.json' assert { type: 'json' };
+import configData from '../../../config/config.json' assert { type: 'json' };
 
   describe('Login Page Tests', () => {
     const data = configData[getStagingEnv()].practicesite
@@ -19,7 +19,7 @@ import configData from '../../config/config.json' assert { type: 'json' };
     before(async () => {
         LoginPage.openUrl(data.url);
         LoginPage.maximizeBrowserWindow();
-    })   
+    });
     
         it('should show error message with invalid credentials', async () => {
             // Perform login with invalid credentials

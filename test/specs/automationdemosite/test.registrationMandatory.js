@@ -6,7 +6,7 @@ import EmailGenerator from '../../helpers/email.generator.js';
 import assertion from '../../helpers/assertion.js';
 import constant from '../../data/constant.js';
 import { getStagingEnv } from '../../utils/envParam.js';
-import configData from '../../config/config.json' assert { type: 'json' };
+import configData from '../../../config/config.json' assert { type: 'json' };
 
 describe('Register a user in automation demo application', () => {
 

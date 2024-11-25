@@ -2,8 +2,9 @@
 import crypto from 'crypto';
 import fs from 'fs';
 import dotenv from 'dotenv';
-dotenv.config();
-
+import path from 'path';
+const projectRoot = process.cwd();
+dotenv.config({ path: path.join(projectRoot, '../.env') })
 const algorithm = 'aes-256-cbc'; // AES encryption algorithm
 const secretKey = process.env.SECRET_KEY; // Encryption key (preferably from environment variables)
 const iv = crypto.randomBytes(16); // Random initialization vector (IV) for encryption

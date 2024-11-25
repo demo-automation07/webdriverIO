@@ -5,7 +5,7 @@ import assertion from '../../helpers/assertion.js';
 import { assert } from 'chai';
 import { logInfo } from '../../helpers/logger.helper.js';
 import { getStagingEnv } from '../../utils/envParam.js';
-import configData from '../../config/config.json' assert { type: 'json' };
+import configData from '../../../config/config.json' assert { type: 'json' };
 describe('validate forgot password',function(){
     const data = configData[getStagingEnv()].facebooksite
     before(async () => {

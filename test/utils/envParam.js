@@ -1,6 +1,9 @@
-import configData from '../config/config.json' assert { type: 'json' };
+import configData from '../../config/config.json' assert { type: 'json' };
 import { logError, logInfo,logWarn } from '../helpers/logger.helper.js';
-
+import dotenv from 'dotenv';
+import path from 'path';
+const projectRoot = process.cwd()
+dotenv.config({ path: path.join(projectRoot, '../.env') })
 class EnvParam {
    
     // Instance method to get the environment (e.g., 'qa')

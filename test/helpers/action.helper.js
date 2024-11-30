@@ -13,14 +13,14 @@ export default class ActionHelper {
         try {
             // Check if the provided URL is a valid string
             if (typeof url !== 'string' || !url.trim()) {
-                logError('Invalid URL provided. Please provide a valid URL string.')
+                logError('Invalid URL provided. Please provide a valid URL string.');
                 throw new Error('Invalid URL provided. Please provide a valid URL string.');
             }
 
             // Open the URL in the browser
             await browser.url(url);  // WebDriverIO's built-in method to navigate to a URL
             logInfo(`Successfully opened the URL: ${url}`);
-            
+
 
         } catch (error) {
             // Log the error if there is an issue with opening the URL
@@ -181,21 +181,21 @@ export default class ActionHelper {
      */
     async scrollWithinContainer(container, element) {
         try {
-            
-                // First, check if the element is already in the visible part of the container
-                const isElementVisible = await element.isDisplayed();
-                if (isElementVisible) {
-                    logInfo('Element is already visible in the container, no need to scroll.');
-                    return;
-                }
 
-        // Scroll using the browser's execute method if the element is out of view
-        await browser.execute(function(conatainer,element) {
-            // Scroll the container to the target element using `scrollIntoView`
-            element.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
-        }, container, element);
+            // First, check if the element is already in the visible part of the container
+            const isElementVisible = await element.isDisplayed();
+            if (isElementVisible) {
+                logInfo('Element is already visible in the container, no need to scroll.');
+                return;
+            }
 
-       // logInfo(`Scrolled element ${element} into view successfully.`);
+            // Scroll using the browser's execute method if the element is out of view
+            await browser.execute(function (conatainer, element) {
+                // Scroll the container to the target element using `scrollIntoView`
+                element.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+            }, container, element);
+
+            // logInfo(`Scrolled element ${element} into view successfully.`);
         } catch (error) {
             logError('Error scrolling within container:', error);
             throw error;
@@ -239,30 +239,30 @@ export default class ActionHelper {
         }
     }
 
-   /**
- * @description Waits for the provided element to exist in the DOM.
- * @param {Webelement} element - The web element to wait for existence.
- * @param {number} [timeout=5000] - Timeout duration in milliseconds (default: 5000ms).
- * @param {string} [errorMessage] - Optional custom error message.
- * @throws {Error} Throws error if the element does not exist within the timeout.
- */
-async waitForExist(element, timeout = 6000, errorMessage = 'Element not found within the timeout') {
-    try {
-        // Wait for the element to exist within the specified timeout
-        await element.waitForExist({ timeout: timeout });
-        logInfo(`Element found: ${element.selector}`);  // Optional log if element is found
-    } catch (error) {
-        // Handle error if the element does not exist within the timeout
-        if (error.message.includes('timeout')) {
-            const errorMsg = errorMessage || `Element with selector "${element.selector}" was not found within ${timeout}ms.`;
-            logError(errorMsg);
-            throw new Error(errorMsg);  // Throw a custom error message
+    /**
+  * @description Waits for the provided element to exist in the DOM.
+  * @param {Webelement} element - The web element to wait for existence.
+  * @param {number} [timeout=5000] - Timeout duration in milliseconds (default: 5000ms).
+  * @param {string} [errorMessage] - Optional custom error message.
+  * @throws {Error} Throws error if the element does not exist within the timeout.
+  */
+    async waitForExist(element, timeout = 6000, errorMessage = 'Element not found within the timeout') {
+        try {
+            // Wait for the element to exist within the specified timeout
+            await element.waitForExist({ timeout: timeout });
+            logInfo(`Element found: ${element.selector}`);  // Optional log if element is found
+        } catch (error) {
+            // Handle error if the element does not exist within the timeout
+            if (error.message.includes('timeout')) {
+                const errorMsg = errorMessage || `Element with selector "${element.selector}" was not found within ${timeout}ms.`;
+                logError(errorMsg);
+                throw new Error(errorMsg);  // Throw a custom error message
+            }
+            // Rethrow the error if it is not related to timeout
+            logError(`Unexpected error while waiting for element: ${error.message}`);
+            throw error;
         }
-        // Rethrow the error if it is not related to timeout
-        logError(`Unexpected error while waiting for element: ${error.message}`);
-        throw error;
     }
-}
 
     /**
      * @description Waits for the cancel loading element to disappear.
@@ -375,6 +375,7 @@ async waitForExist(element, timeout = 6000, errorMessage = 'Element not found wi
     async getTextFromElement(element) {
         try {
             await this.waitForExist(element);
+            await this.highLightElement(element);
             return await element.getText();
         } catch (error) {
             logError(`Error getting text from element: ${error}`);
@@ -382,15 +383,15 @@ async waitForExist(element, timeout = 6000, errorMessage = 'Element not found wi
         }
     }
 
-     /**
-      
-    * @description Selects an option from a dropdown by its value.
-    * @param {Webelement} element - The web element to select
-    * @param {string} text - The text of the option to be selected from the dropdown.
-    * @throws {Error} Throws error if the dropdown or the value option cannot be found or if any issue occurs during the selection.
+    /**
+     
+   * @description Selects an option from a dropdown by its value.
+   * @param {Webelement} element - The web element to select
+   * @param {string} text - The text of the option to be selected from the dropdown.
+   * @throws {Error} Throws error if the dropdown or the value option cannot be found or if any issue occurs during the selection.
 
-     */
-    async SelectElementByVisibleText(element,text) {
+    */
+    async SelectElementByVisibleText(element, text) {
         try {
             await this.waitForExist(element);
             await element.selectByVisibleText(text);
@@ -400,15 +401,15 @@ async waitForExist(element, timeout = 6000, errorMessage = 'Element not found wi
         }
     }
 
-     /**
-      
-    * @description Selects an option from a dropdown by its value.
-    * @param {Webelement} element - The web element to select
-    * @param {string} value - The value of the option to be selected from the dropdown.
-    * @throws {Error} Throws error if the dropdown or the value option cannot be found or if any issue occurs during the selection.
+    /**
+     
+   * @description Selects an option from a dropdown by its value.
+   * @param {Webelement} element - The web element to select
+   * @param {string} value - The value of the option to be selected from the dropdown.
+   * @throws {Error} Throws error if the dropdown or the value option cannot be found or if any issue occurs during the selection.
 
-     */
-     async SelectElementByValue(element,value) {
+    */
+    async SelectElementByValue(element, value) {
         try {
             await this.waitForExist(element);
             await element.selectByValue(value);
@@ -518,202 +519,224 @@ async waitForExist(element, timeout = 6000, errorMessage = 'Element not found wi
         }
     }
 
-   /**
-     * Switches to an iframe by element reference.
-     * @param {WebdriverIO.Element} iframe - The iframe element to switch to.
+    /**
+      * Switches to an iframe by element reference.
+      * @param {WebdriverIO.Element} iframe - The iframe element to switch to.
+      */
+    async switchToIframe(iframe) {
+        try {
+            await this.waitForElementToBeVisible(iframe);
+            await browser.switchToFrame(iframe);
+            logInfo('Successfully switched to iframe.');
+        } catch (error) {
+            logError('Error while switching to iframe:', error);
+            throw new Error('Failed to switch to iframe.');
+        }
+    }
+
+    /**
+     * Switches back to the main document from an iframe.
      */
-   async switchToIframe(iframe) {
-    try {
-        await this.waitForElementToBeVisible(iframe);
-        await browser.switchToFrame(iframe);
-        logInfo('Successfully switched to iframe.');
-    } catch (error) {
-        logError('Error while switching to iframe:', error);
-        throw new Error('Failed to switch to iframe.');
-    }
-}
-
-/**
- * Switches back to the main document from an iframe.
- */
-async switchToMainFrame() {
-    try {
-        await browser.switchToParentFrame();
-        logInfo('Successfully switched back to the main document.');
-    } catch (error) {
-        logError('Error while switching back to the main document:', error);
-        throw new Error('Failed to switch to main frame.');
-    }
-}
-
-/**
- * Performs a key press action.
- * @param {string} key - The key to press (e.g., 'Enter', 'ArrowDown').
- */
-async pressKey(key) {
-    try {
-        await browser.keys([key]);
-        logInfo(`Successfully pressed the key: ${key}`);
-    } catch (error) {
-        logError(`Error while pressing the key ${key}:`, error);
-        throw new Error(`Failed to press key ${key}.`);
-    }
-}
-
-/**
- * Waits for an element to contain specific text.
- * @param {WebdriverIO.Element} element - The element to check text for.
- * @param {string} text - The text to wait for.
- * @param {number} timeout - Maximum wait time.
- */
-async waitForTextInElement(element, text, timeout = 5000) {
-    try {
-        await browser.waitUntil(
-            async () => (await element.getText()).includes(text),
-            {
-                timeout,
-                timeoutMsg: `Expected text "${text}" not found within ${timeout} ms`
-            }
-        );
-        logInfo(`Text "${text}" found in element.`);
-    } catch (error) {
-        logError(`Error while waiting for text "${text}" in element:`, error);
-        throw new Error(`Failed to find text "${text}" within ${timeout} ms.`);
-    }
-}
-
-/**
- * Waits for a new URL to load based on partial URL match.
- * @param {string} partialUrl - Partial URL to wait for.
- * @param {number} timeout - Maximum wait time.
- */
-async waitForUrlContains(partialUrl, timeout = 5000) {
-    try {
-        await browser.waitUntil(
-            async () => (await browser.getUrl()).includes(partialUrl),
-            {
-                timeout,
-                timeoutMsg: `URL containing "${partialUrl}" not loaded within ${timeout} ms`
-            }
-        );
-        logInfo(`URL containing "${partialUrl}" loaded successfully.`);
-    } catch (error) {
-        logError(`Error while waiting for URL containing "${partialUrl}":`, error);
-        throw new Error(`Failed to load URL containing "${partialUrl}" within ${timeout} ms.`);
-    }
-}
-
-/**
- * Downloads a file and waits until the file is present in the download directory.
- * @param {string} fileName - The name of the file to wait for.
- * @param {string} downloadDir - The directory to check for the file.
- * @param {number} timeout - Maximum wait time.
- */
-async waitForFileDownload(fileName, downloadDir = './downloads', timeout = 10000) {
-    const fs = require('fs');
-    const path = require('path');
-    const filePath = path.join(downloadDir, fileName);
-
-    try {
-        await browser.waitUntil(
-            () => fs.existsSync(filePath),
-            {
-                timeout,
-                timeoutMsg: `File "${fileName}" not downloaded within ${timeout} ms`
-            }
-        );
-        logInfo(`File "${fileName}" downloaded successfully.`);
-    } catch (error) {
-        logError(`Error while waiting for file download "${fileName}":`, error);
-        throw new Error(`Failed to download file "${fileName}" within ${timeout} ms.`);
-    }
-}
-
-/**
- * Captures a screenshot with a specific file name.
- * @param {string} fileName - Name of the screenshot file.
- * @param {string} outputDir - Directory to save the screenshot.
- */
-async captureScreenshot(fileName, outputDir = './screenshots') {
-    const fs = require('fs');
-    const path = require('path');
-    const filePath = path.join(outputDir, fileName);
-
-    try {
-        if (!fs.existsSync(outputDir)) {
-            fs.mkdirSync(outputDir, { recursive: true });
-            logInfo(`Created screenshot directory: ${outputDir}`);
+    async switchToMainFrame() {
+        try {
+            await browser.switchToParentFrame();
+            logInfo('Successfully switched back to the main document.');
+        } catch (error) {
+            logError('Error while switching back to the main document:', error);
+            throw new Error('Failed to switch to main frame.');
         }
-
-        await browser.saveScreenshot(filePath);
-        logInfo(`Screenshot saved at ${filePath}`);
-    } catch (error) {
-        logError(`Error while capturing screenshot:`, error);
-        throw new Error('Failed to capture screenshot.');
     }
-}
 
-/**
- * Helper function to wait for an element to be visible before interacting with it.
- * @param {WebdriverIO.Element} element - The element to check visibility for.
- * @param {number} timeout - Maximum wait time.
- */
-async waitForElementToBeVisible(element, timeout = 5000) {
-    try {
-        await element.waitForDisplayed({ timeout });
-        logInfo(`${element} Element is visible.`);
-    } catch (error) {
-        logError('Error while waiting for element to be visible:', error);
-        throw new Error(`Failed to wait for element to be visible within ${timeout} ms.`);
-    }
-}
-
-/**
- * @description Maximizes the browser window or sets a custom size.
- * If width and height are provided, the window will be resized to those dimensions.
- * If no width and height are provided, the window will be maximized.
- * 
- * @param {number} [width] - The width of the browser window (in pixels). Optional.
- * @param {number} [height] - The height of the browser window (in pixels). Optional.
- * 
- * @throws {Error} Throws an error if the browser window cannot be resized or maximized.
- */
-async maximizeOrSetWindowSize(width, height) {
-    try {
-        // If width and height are provided, resize the browser window to the specified dimensions
-        if (width && height) {
-            await browser.setWindowSize(width, height);  // Set custom window size
-            logInfo(`Browser window resized to ${width}x${height}.`);
-        } else {
-            // If no dimensions are provided, maximize the window
-            browser.maximizeWindow();
-            logInfo('Browser window maximized.');
+    /**
+     * Performs a key press action.
+     * @param {string} key - The key to press (e.g., 'Enter', 'ArrowDown').
+     */
+    async pressKey(key) {
+        try {
+            await browser.keys([key]);
+            logInfo(`Successfully pressed the key: ${key}`);
+        } catch (error) {
+            logError(`Error while pressing the key ${key}:`, error);
+            throw new Error(`Failed to press key ${key}.`);
         }
-    } catch (error) {
-        // Log and re-throw the error if resizing or maximizing fails
-        logError(`Error resizing or maximizing browser window: ${error}`);
-        throw error;
     }
-}
-/**
- * @description Waits for the browser to load completely before executing further steps.
- * This function waits for the page's readyState to be "complete", indicating that the page has finished loading.
- */
-async waitForPageToLoad() {
-    try {
-       // Wait for the body element to be present (i.e., page loaded)
-       await browser.waitUntil(async () => {
-            const body = await $('body');  // You can replace this with another element
-            return body.isDisplayed();  // Check if the body is displayed, meaning the page loaded
-        }, {
-            timeout: 50000,  // Wait up to 10 seconds
-            timeoutMsg: 'Page did not load within 50 seconds',
-            interval: 500  // Check every 500ms
-        });
-        logInfo('Page has loaded successfully.');
-    } catch (error) {
-        logError(`Error waiting for page to load: ${error}`);
-        throw error;  // Re-throw the error after logging it
+
+    /**
+     * Waits for an element to contain specific text.
+     * @param {WebdriverIO.Element} element - The element to check text for.
+     * @param {string} text - The text to wait for.
+     * @param {number} timeout - Maximum wait time.
+     */
+    async waitForTextInElement(element, text, timeout = 5000) {
+        try {
+            await browser.waitUntil(
+                async () => (await element.getText()).includes(text),
+                {
+                    timeout,
+                    timeoutMsg: `Expected text "${text}" not found within ${timeout} ms`
+                }
+            );
+            logInfo(`Text "${text}" found in element.`);
+        } catch (error) {
+            logError(`Error while waiting for text "${text}" in element:`, error);
+            throw new Error(`Failed to find text "${text}" within ${timeout} ms.`);
+        }
     }
-}
+
+    /**
+     * Waits for a new URL to load based on partial URL match.
+     * @param {string} partialUrl - Partial URL to wait for.
+     * @param {number} timeout - Maximum wait time.
+     */
+    async waitForUrlContains(partialUrl, timeout = 5000) {
+        try {
+            await browser.waitUntil(
+                async () => (await browser.getUrl()).includes(partialUrl),
+                {
+                    timeout,
+                    timeoutMsg: `URL containing "${partialUrl}" not loaded within ${timeout} ms`
+                }
+            );
+            logInfo(`URL containing "${partialUrl}" loaded successfully.`);
+        } catch (error) {
+            logError(`Error while waiting for URL containing "${partialUrl}":`, error);
+            throw new Error(`Failed to load URL containing "${partialUrl}" within ${timeout} ms.`);
+        }
+    }
+
+    /**
+     * Downloads a file and waits until the file is present in the download directory.
+     * @param {string} fileName - The name of the file to wait for.
+     * @param {string} downloadDir - The directory to check for the file.
+     * @param {number} timeout - Maximum wait time.
+     */
+    async waitForFileDownload(fileName, downloadDir = './downloads', timeout = 10000) {
+        const fs = require('fs');
+        const path = require('path');
+        const filePath = path.join(downloadDir, fileName);
+
+        try {
+            await browser.waitUntil(
+                () => fs.existsSync(filePath),
+                {
+                    timeout,
+                    timeoutMsg: `File "${fileName}" not downloaded within ${timeout} ms`
+                }
+            );
+            logInfo(`File "${fileName}" downloaded successfully.`);
+        } catch (error) {
+            logError(`Error while waiting for file download "${fileName}":`, error);
+            throw new Error(`Failed to download file "${fileName}" within ${timeout} ms.`);
+        }
+    }
+
+    /**
+     * Captures a screenshot with a specific file name.
+     * @param {string} fileName - Name of the screenshot file.
+     * @param {string} outputDir - Directory to save the screenshot.
+     */
+    async captureScreenshot(fileName, outputDir = './screenshots') {
+        const fs = require('fs');
+        const path = require('path');
+        const filePath = path.join(outputDir, fileName);
+
+        try {
+            if (!fs.existsSync(outputDir)) {
+                fs.mkdirSync(outputDir, { recursive: true });
+                logInfo(`Created screenshot directory: ${outputDir}`);
+            }
+
+            await browser.saveScreenshot(filePath);
+            logInfo(`Screenshot saved at ${filePath}`);
+        } catch (error) {
+            logError(`Error while capturing screenshot:`, error);
+            throw new Error('Failed to capture screenshot.');
+        }
+    }
+
+    /**
+     * Helper function to wait for an element to be visible before interacting with it.
+     * @param {WebdriverIO.Element} element - The element to check visibility for.
+     * @param {number} timeout - Maximum wait time.
+     */
+    async waitForElementToBeVisible(element, timeout = 5000) {
+        try {
+            await element.waitForDisplayed({ timeout });
+            logInfo(`${element} Element is visible.`);
+        } catch (error) {
+            logError('Error while waiting for element to be visible:', error);
+            throw new Error(`Failed to wait for element to be visible within ${timeout} ms.`);
+        }
+    }
+
+    /**
+     * @description Maximizes the browser window or sets a custom size.
+     * If width and height are provided, the window will be resized to those dimensions.
+     * If no width and height are provided, the window will be maximized.
+     * 
+     * @param {number} [width] - The width of the browser window (in pixels). Optional.
+     * @param {number} [height] - The height of the browser window (in pixels). Optional.
+     * 
+     * @throws {Error} Throws an error if the browser window cannot be resized or maximized.
+     */
+    async maximizeOrSetWindowSize(width, height) {
+        try {
+            // If width and height are provided, resize the browser window to the specified dimensions
+            if (width && height) {
+                await browser.setWindowSize(width, height);  // Set custom window size
+                logInfo(`Browser window resized to ${width}x${height}.`);
+            } else {
+                // If no dimensions are provided, maximize the window
+                browser.maximizeWindow();
+                logInfo('Browser window maximized.');
+            }
+        } catch (error) {
+            // Log and re-throw the error if resizing or maximizing fails
+            logError(`Error resizing or maximizing browser window: ${error}`);
+            throw error;
+        }
+    }
+    /**
+     * @description Waits for the browser to load completely before executing further steps.
+     * This function waits for the page's readyState to be "complete", indicating that the page has finished loading.
+     */
+    async waitForPageToLoad() {
+        try {
+            // Wait for the body element to be present (i.e., page loaded)
+            await browser.waitUntil(async () => {
+                const body = await $('body');  // You can replace this with another element
+                return body.isDisplayed();  // Check if the body is displayed, meaning the page loaded
+            }, {
+                timeout: 50000,  // Wait up to 10 seconds
+                timeoutMsg: 'Page did not load within 50 seconds',
+                interval: 500  // Check every 500ms
+            });
+            logInfo('Page has loaded successfully.');
+        } catch (error) {
+            logError(`Error waiting for page to load: ${error}`);
+            throw error;  // Re-throw the error after logging it
+        }
+    }
+
+   /**
+    * @description Checks whether an element is visible on the page., This method waits for the element to exist in the DOM, then checks its visibility using `isDisplayed()`.
+    * @param {WebdriverIO.Element} element - The WebDriverIO element to check for visibility.
+    * @returns {Promise<boolean>} - Returns `true` if the element is visible, `false` if it is not visible.
+    */
+    async isElementDisplayed(element) {
+        try {
+            // Wait for the element to exist in the DOM
+            await this.waitForExist(element);
+
+            // Check if the element is displayed (visible) on the page
+            const isDisplayed = await element.isDisplayed();
+
+            // Return the result of the visibility check
+            return isDisplayed;
+        } catch (error) {
+            // If there's an error, log it and throw a new error
+            logError(`Error checking if element is displayed: ${error}`);
+            throw new Error('Failed to check if the element is displayed');
+        }
+    }
 }

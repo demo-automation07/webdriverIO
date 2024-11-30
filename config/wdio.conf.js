@@ -2,9 +2,9 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const allure = require('allure-commandline');
-const allure_directory = '../report/allure-report';
-const json_directory = "../report/json-report"
-import mergeResults from '@wdio/json-reporter/mergeResults'
+const allure_directory = './report/allure';
+const json_directory = "./report/json-report";
+import mergeResults from '@wdio/json-reporter/mergeResults';
 const fs = require('fs');
 const path = require('path');
 
@@ -39,16 +39,16 @@ export const config = {
     suites : {
         TC_smoke : [
             '../test/specs/automationdemosite/test.registration.js',
-             '../test/specs/automationdemosite/test.registrationMandatory.js'
+            '../test/specs/automationdemosite/test.registrationMandatory.js'
         ],
         TC_regresion : [
             '../test/specs/automationdemosite/test.registration.js',
             '../test/specs/automationdemosite/test.registrationMandatory.js',
             '../test/specs/practiceautomation/test.login.js',
-             '../test/specs/facebook/test.forgotpassword.js'
+            // '../test/specs/facebook/test.forgotpassword.js'
         ],
         TC_end2end :[
-            //'../test/specs/facebook/test.forgotpassword.js',
+           // '../test/specs/facebook/test.forgotpassword.js',
             '../test/specs/practiceautomation/test.login.js'
         ]
     },
@@ -176,7 +176,7 @@ export const config = {
                // const specName = path.basename(opts.specs[0], '.js');
               //  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
                 const timestamp = "";
-                return `results-[${opts.cid}]-${opts.capabilities.browserName}.json`
+                return `results-[${opts.cid}]-${opts.capabilities.browserName}.json`;
             },
             
             combined: true
@@ -344,26 +344,26 @@ export const config = {
      * @param {<Object>} results object containing test results
      */
     onComplete: function (exitCode, config, capabilities, results) {
-        mergeResults(json_directory, 'results-.*.json', 'combined-report.json')
-        const reportError = new Error('Could not generate Allure report')
-        const generation = allure(['generate', allure_directory + '/allure-results', '--clean', '-o', allure_directory + '/allure-report'])
+        mergeResults(json_directory, 'results-.*.json', 'combined-report.json');
+        const reportError = new Error('Could not generate Allure report');
+        const generation = allure(['generate', allure_directory + '/allure-results', '--clean', '-o', allure_directory + '/allure-report']);
 
         return new Promise((resolve, reject) => {
             const generationTimeout = setTimeout(
                 () => reject(reportError),
-                5000)
+                5000);
 
             generation.on('exit', function (exitCode) {
-                clearTimeout(generationTimeout)
+                clearTimeout(generationTimeout);
 
                 if (exitCode !== 0) {
-                    return reject(reportError)
+                    return reject(reportError);
                 }
 
-                console.log('Allure report successfully generated')
-                resolve()
-            })
-        })
+                console.log('Allure report successfully generated');
+                resolve();
+            });
+        });
     },
     /**
     * Gets executed when a refresh happens.
@@ -384,4 +384,4 @@ export const config = {
     */
     // afterAssertion: function(params) {
     // }
-}
+};

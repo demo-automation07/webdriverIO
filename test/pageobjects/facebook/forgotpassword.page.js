@@ -1,7 +1,7 @@
-import { $ } from '@wdio/globals' 
-import actionhelper from '../../helpers/action.helper.js'
-import {logInfo,logError} from '../../helpers/logger.helper.js'
-class ForgotPassword extends actionhelper{
+import { $ } from '@wdio/globals';
+import actionhelper from '../../helpers/action.helper.js';
+import { logInfo, logError } from '../../helpers/logger.helper.js';
+class ForgotPassword extends actionhelper {
 
     get otpField() {
         return $('input[name="n"]');
@@ -12,12 +12,12 @@ class ForgotPassword extends actionhelper{
         return $('button[type="submit"]');
     }
 
-     /**
-     * Method to input OTP in the OTP field
-     * @param {string} otp - The OTP value to be entered.
-     * @throws {Error} Throws an error if there's an issue entering the OTP.
-     */
-     async enterOtp(otp) {
+    /**
+    * Method to input OTP in the OTP field
+    * @param {string} otp - The OTP value to be entered.
+    * @throws {Error} Throws an error if there's an issue entering the OTP.
+    */
+    async enterOtp(otp) {
         try {
             logInfo(`Entering OTP: ${otp}`);  // Log the OTP entry attempt
             // Set value to the OTP field using the helper function

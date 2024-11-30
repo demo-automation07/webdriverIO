@@ -1,6 +1,6 @@
-import { $ } from '@wdio/globals' 
-import actionhelper from '../../helpers/action.helper.js'
-import {logInfo,logError} from '../../helpers/logger.helper.js'
+import { $ } from '@wdio/globals';
+import actionhelper from '../../helpers/action.helper.js';
+import { logInfo, logError } from '../../helpers/logger.helper.js';
 
 
 /**
@@ -8,12 +8,12 @@ import {logInfo,logError} from '../../helpers/logger.helper.js'
  * @description Page object for the Home page, containing specific selectors and methods for interacting with the home page.
  */
 class LoginPage extends actionhelper {
-    
-      /**
-     * Gets the username input field on the login page.
-     * @returns {WebdriverIO.Element} The username input field element.
-     */
-      get usernameField() {
+
+    /**
+   * Gets the username input field on the login page.
+   * @returns {WebdriverIO.Element} The username input field element.
+   */
+    get usernameField() {
         return $('#username');
     }
 
@@ -49,10 +49,10 @@ class LoginPage extends actionhelper {
      */
     async login(username, password) {
         try {
-            logInfo('enter username and password in the','loginPage')
-            await this.setValueToElement(this.usernameField,username);  // Set the username value
-            await this.setValueToElement(this.passwordField,password);  // Set the password value
-            await this.clickElement(this.loginButton)  // Click the login button
+            logInfo('enter username and password in the', 'loginPage');
+            await this.setValueToElement(this.usernameField, username);  // Set the username value
+            await this.setValueToElement(this.passwordField, password);  // Set the password value
+            await this.clickElement(this.loginButton);  // Click the login button
         } catch (error) {
             // Log the error and throw a custom error message
             logError(`Login failed with ${error.message}`);
@@ -65,9 +65,9 @@ class LoginPage extends actionhelper {
      * @returns {Promise<string>} The text of the error message displayed on the page.
      */
     async getErrorMessage() {
-        try{
-            return await this.getTextFromElement(this.errorMessage)  // Get the text of the error message
-        }catch(error){
+        try {
+            return await this.getTextFromElement(this.errorMessage);  // Get the text of the error message
+        } catch (error) {
             logError(`Login failed with error message${error.message}`);
             throw new Error('Failed to retrieve the error message from the page.');
         }

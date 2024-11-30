@@ -2,7 +2,7 @@ const moment = require('moment');
 
 const runTimestamp = new Date().getTime().toString(36);
 const offset = moment().utcOffset();
-var days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+//var days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
 var months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
 
 class DataGeneratorHelper {
@@ -122,10 +122,10 @@ class DataGeneratorHelper {
     return moment();
   }
 
-  async convertIdDate(dateID){
+  async convertIdDate(dateID) {
     const dateMap = new Map();
     const dateObj = moment(dateID);
-    const date = dateObj.format("D")
+    const date = dateObj.format("D");
     const formatedDate = dateObj.format("DD");
     const day = dateObj.format("dddd");
     const month = dateObj.format("MMM");

@@ -12,6 +12,8 @@ report/
 timelineReport/
 Results/
 logs/
+**/report/**
+**/logs/**
 
 # Compiled Java class files
 *.class

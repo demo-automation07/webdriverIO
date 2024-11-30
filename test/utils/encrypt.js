@@ -4,7 +4,7 @@ import fs from 'fs';
 import dotenv from 'dotenv';
 import path from 'path';
 const projectRoot = process.cwd();
-dotenv.config({ path: path.join(projectRoot, '../.env') })
+dotenv.config({ path: path.join(projectRoot, '../.env') });
 const algorithm = 'aes-256-cbc'; // AES encryption algorithm
 const secretKey = process.env.SECRET_KEY; // Encryption key (preferably from environment variables)
 const iv = crypto.randomBytes(16); // Random initialization vector (IV) for encryption
@@ -15,7 +15,7 @@ const iv = crypto.randomBytes(16); // Random initialization vector (IV) for encr
  * @returns {Object} The encrypted password and the IV used for encryption.
  */
 export function encryptPassword(password) {
-    const cipher = crypto.createCipheriv(algorithm, Buffer.from(secretKey,'hex'), iv);
+    const cipher = crypto.createCipheriv(algorithm, Buffer.from(secretKey, 'hex'), iv);
     let encrypted = cipher.update(password);
     encrypted += cipher.final('hex');
 
@@ -54,7 +54,7 @@ export function readEncryptedPasswordFromFile(filePath) {
  * @returns {string} The decrypted plain password.
  */
 export function decryptPassword(encryptedData, iv) {
-    const decipher = crypto.createDecipheriv(algorithm, Buffer.from(secretKey,'hex'), Buffer.from(iv, 'hex'));
+    const decipher = crypto.createDecipheriv(algorithm, Buffer.from(secretKey, 'hex'), Buffer.from(iv, 'hex'));
     let decrypted = decipher.update(encryptedData, 'hex', 'utf-8');
     decrypted += decipher.final('utf-8');
     return decrypted;

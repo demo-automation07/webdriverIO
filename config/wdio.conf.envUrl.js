@@ -1,6 +1,6 @@
 // Import the config object from conf.js
-import {config as wdioconfig} from './wdio.conf.js';
-import { deepmerge } from 'deepmerge-ts'
+import { config as wdioconfig } from './wdio.conf.js';
+import { deepmerge } from 'deepmerge-ts';
 import { getStagingEnv } from '../test/utils/envParam.js';
 import dotenv from 'dotenv';
 import { browser } from '@wdio/globals';
@@ -8,7 +8,7 @@ import path from 'path';
 
 // Get the current working directory using process.cwd()
 const projectRoot = process.cwd();
-dotenv.config({ path: path.join(projectRoot, '../.env') })
+dotenv.config({ path: path.join(projectRoot, '../.env') });
 const env = getStagingEnv();
 let url;
 switch (env) {
@@ -30,27 +30,27 @@ switch (env) {
 }
 
 export const config = deepmerge(wdioconfig.config, {
-    ...wdioconfig,
-    baseUrl: url,
-    
-    suites : {
-        TC_demosite : [
-            '../test/specs/automationdemosite/test.registration.js',
-            '../test/specs/automationdemosite/test.registrationMandatory.js'
-        ],
-        TC_practicesite : [
-            '../test/specs/practiceautomation/test.login.js',
-            
-        ],
-        TC_facebooksite :[
-            '../test/specs/facebook/test.forgotpassword.js',
-          
-        ]
-    },
+  ...wdioconfig,
+  baseUrl: url,
 
-    before: async function (capabilities, specs) {
-        await browser.url(url);
-        await browser.maximizeWindow();
-    }
-},{ clone: false })
+  suites: {
+    TC_demosite: [
+      '../test/specs/automationdemosite/test.registration.js',
+      '../test/specs/automationdemosite/test.registrationMandatory.js'
+    ],
+    TC_practicesite: [
+      '../test/specs/practiceautomation/test.login.js',
+
+    ],
+    TC_facebooksite: [
+      '../test/specs/facebook/test.forgotpassword.js',
+
+    ]
+  },
+
+  before: async function () {
+    await browser.url(url);
+    await browser.maximizeWindow();
+  }
+}, { clone: false });
 config.reporters.push('allure');

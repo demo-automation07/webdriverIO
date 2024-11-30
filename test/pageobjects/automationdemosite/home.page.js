@@ -1,6 +1,6 @@
-import { $ } from '@wdio/globals' 
-import actionhelper from '../../helpers/action.helper.js'
-import {logInfo,logError} from '../../helpers/logger.helper.js'
+import { $ } from '@wdio/globals';
+import actionhelper from '../../helpers/action.helper.js';
+import { logInfo, logError } from '../../helpers/logger.helper.js';
 
 
 /**
@@ -8,12 +8,12 @@ import {logInfo,logError} from '../../helpers/logger.helper.js'
  * @description Page object for the Home page, containing specific selectors and methods for interacting with the home page.
  */
 class HomePage extends actionhelper {
-    
+
     /**
      * @description Gets the sign-in button on the home page.
      * @returns {WebdriverIO.Element} The sign-in button element.
      */
-    get btnSignIn () {
+    get btnSignIn() {
         return $('#btn1');
     }
 
@@ -21,7 +21,7 @@ class HomePage extends actionhelper {
      * @description Gets the skip sign-in button on the home page.
      * @returns {WebdriverIO.Element} The skip sign-in button element.
      */
-    get btnSkipSignIn () {
+    get btnSkipSignIn() {
         return $('#btn2');
     }
 
@@ -29,7 +29,7 @@ class HomePage extends actionhelper {
      * @description Gets the email input field on the home page.
      * @returns {WebdriverIO.Element} The email input element.
      */
-    get inputEmail () {
+    get inputEmail() {
         return $('#email');
     }
 
@@ -38,7 +38,7 @@ class HomePage extends actionhelper {
      * Logs the action and handles any potential errors.
      * @throws {Error} Throws an error if unable to click the skip sign-in button.
      */
-    async clickSkipSignIn () {
+    async clickSkipSignIn() {
         try {
             logInfo('Clicking on the "Skip Sign In" button', 'HomePage');
             await this.clickElement(this.btnSkipSignIn);
@@ -53,7 +53,7 @@ class HomePage extends actionhelper {
      * Logs the action and handles any potential errors.
      * @throws {Error} Throws an error if unable to click the sign-in button.
      */
-    async clickSignIn () {
+    async clickSignIn() {
         try {
             logInfo('Clicking on the "Sign In" button', 'HomePage');
             await this.clickElement(this.btnSignIn);
@@ -69,7 +69,7 @@ class HomePage extends actionhelper {
      * @param {string} email - The email address to be entered.
      * @throws {Error} Throws an error if unable to enter the email address.
      */
-    async enterEmail (email) {
+    async enterEmail(email) {
         try {
             logInfo(`Entering email: ${email}`, 'HomePage');
             await this.setValueToElement(this.inputEmail, email);

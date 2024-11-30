@@ -1,9 +1,9 @@
-import { $ } from '@wdio/globals' 
-import actionhelper from '../../helpers/action.helper.js'
-import {logError,logInfo} from '../../helpers/logger.helper.js'
+import { $ } from '@wdio/globals';
+import actionhelper from '../../helpers/action.helper.js';
+import { logError, logInfo } from '../../helpers/logger.helper.js';
 
 
-class LandingPage extends actionhelper{
+class LandingPage extends actionhelper {
     //locators for landing page
     get emailField() {
         return $('input#email');
@@ -29,7 +29,7 @@ class LandingPage extends actionhelper{
         return $('button[type="submit"]');
     }
 
-    
+
     /**
      * Logs in to Facebook using the provided email and password
      * @param {string} email - The email to use for login.
@@ -73,7 +73,10 @@ class LandingPage extends actionhelper{
     async clickTryAnotherWay() {
         try {
             logInfo('Clicking the "Try Another Way" button');  // Log attempt to click the try another way button
-            await this.clickElement(this.tryAnotherWayButton);
+            const checkelement = await this.getPresenceOfElement(this.tryAnotherWayButton);
+            if (checkelement) {
+                await this.clickElement(this.tryAnotherWayButton);
+            }
             logInfo('Successfully clicked "Try Another Way" button');  // Log success message
         } catch (error) {
             logError('Error clicking "Try Another Way" button', error);  // Log error if button click fails

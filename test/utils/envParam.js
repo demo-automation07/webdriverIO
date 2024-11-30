@@ -1,11 +1,10 @@
-import configData from '../../config/config.json' assert { type: 'json' };
-import { logError, logInfo,logWarn } from '../helpers/logger.helper.js';
+import { logInfo, logWarn } from '../helpers/logger.helper.js';
 import dotenv from 'dotenv';
 import path from 'path';
-const projectRoot = process.cwd()
-dotenv.config({ path: path.join(projectRoot, '../.env') })
+const projectRoot = process.cwd();
+dotenv.config({ path: path.join(projectRoot, '../.env') });
 class EnvParam {
-   
+
     // Instance method to get the environment (e.g., 'qa')
     static getStagingEnv() {
         const param = process.argv.slice(2);
@@ -14,7 +13,7 @@ class EnvParam {
         if (index === -1 || !param[index + 1]) {
             logWarn(`------stagingEnv is not provided---------`);
             logInfo(`------starting the staging in ${defaultstaging} environment-----`);
-            return defaultstaging
+            return defaultstaging;
         }
         const env = param[index + 1]; // Return the environment (e.g., 'qa', 'dev')
         logInfo(`--------Using environment: ${env}----------`);  // Log the selected environment
@@ -34,7 +33,7 @@ class EnvParam {
         return suiteName;
     }
 
-   
+
     // // Static method to get both the environment and suite configuration data
     // static getConfigEnvandSuite() {
     //     const args = process.argv.slice(2);

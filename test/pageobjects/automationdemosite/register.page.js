@@ -1,6 +1,6 @@
-import { $ } from '@wdio/globals'
-import actionhelper from '../../helpers/action.helper.js'
-import {logInfo,logError} from '../../helpers/logger.helper.js'
+import { $ } from '@wdio/globals';
+import actionhelper from '../../helpers/action.helper.js';
+import { logInfo, logError } from '../../helpers/logger.helper.js';
 
 
 /**
@@ -41,7 +41,7 @@ class RegisterPage extends actionhelper {
         return $('#basicBootstrapForm input[type="email"]');
     }
 
-    get languageLabel(){
+    get languageLabel() {
         return $("//div[@class='form-group']/label[text()='Languages']");
     }
 
@@ -49,7 +49,7 @@ class RegisterPage extends actionhelper {
         return $('#basicBootstrapForm input[type="tel"]');
     }
 
-    get genderRadioButton(){
+    get genderRadioButton() {
         return '#basicBootstrapForm input[value="{gender}"]';
     }
     // Gender radio buttons
@@ -89,7 +89,7 @@ class RegisterPage extends actionhelper {
         return $('#imagesrc');
     }
 
-    get ddSkills(){
+    get ddSkills() {
         return $('#Skills');
     }
 
@@ -140,14 +140,14 @@ class RegisterPage extends actionhelper {
         }
     }
 
-     /**
-     * @description clsose the multi-select dropdown.
-     * @throws {Error} Throws error if the dropdown cannot be closed.
-     */
-     async closeLanguageDropDown() {
+    /**
+    * @description clsose the multi-select dropdown.
+    * @throws {Error} Throws error if the dropdown cannot be closed.
+    */
+    async closeLanguageDropDown() {
         try {
             logInfo('closing language selection dropdown');
-            await this.clickElement(this.languageLabel); 
+            await this.clickElement(this.languageLabel);
             logInfo('Dropdown closed successfully');
         } catch (error) {
             logError('Failed to close the dropdown: ' + error);
@@ -156,37 +156,37 @@ class RegisterPage extends actionhelper {
     }
 
 
- /**
- * @description Selects a language from the dropdown.
- * @param {string} languageToSelect - The language to select.
- * @throws {Error} Throws error if the language is not found.
- */
-  async selectLanguage(languageToSelect) {
-    try {
-        logInfo(`Attempting to select language: ${languageToSelect}`);
-        await this.openLanguageDropdown();  // Open the dropdown
-        await this.scrollElementIntoCenter(this.languageListContainer);
-        const langSelector = $(this.LanguageItem.replace("{language}", languageToSelect));
-                try {
-                    // Scroll the language option into view
-                    await this.scrollWithinContainer(this.languageListContainer, langSelector);
-                  
-                } catch (scrollError) {
-                    logError('Error scrolling to the language: ' + scrollError);
-                    throw new Error(`Error scrolling to ${langSelector}`);
-                }
+    /**
+    * @description Selects a language from the dropdown.
+    * @param {string} languageToSelect - The language to select.
+    * @throws {Error} Throws error if the language is not found.
+    */
+    async selectLanguage(languageToSelect) {
+        try {
+            logInfo(`Attempting to select language: ${languageToSelect}`);
+            await this.openLanguageDropdown();  // Open the dropdown
+            await this.scrollElementIntoCenter(this.languageListContainer);
+            const langSelector = $(this.LanguageItem.replace("{language}", languageToSelect));
+            try {
+                // Scroll the language option into view
+                await this.scrollWithinContainer(this.languageListContainer, langSelector);
 
-                // Click the language
-                await this.clickElement(langSelector)
-                
-              
-            
+            } catch (scrollError) {
+                logError('Error scrolling to the language: ' + scrollError);
+                throw new Error(`Error scrolling to ${langSelector}`);
+            }
+
+            // Click the language
+            await this.clickElement(langSelector);
+
+
+
         } catch (error) {
-        logError(`Error selecting language ${languageToSelect}: ` + error);
-        throw error;  // Re-throw error after logging
+            logError(`Error selecting language ${languageToSelect}: ` + error);
+            throw error;  // Re-throw error after logging
+        }
+        await this.closeLanguageDropDown();
     }
-    await this.closeLanguageDropDown();
-}
     /**
      * @description Gets the currently selected language from the dropdown.
      * @returns {string} The selected language.
@@ -202,28 +202,28 @@ class RegisterPage extends actionhelper {
         }
     }
 
-   /**
- * @description Selects a skill from a dropdown by its visible text.
- * @param {string} value - The visible text of the skill to be selected from the dropdown.
- * @throws {Error} Throws error if the selection fails or if any issue occurs while selecting the skill.
- */
-async selectSkills(value) {
-    
-    try {
-        // Log the action being performed
-        logInfo(`Attempting to select skill with visible text: ${value}`);
-        
-        // Ensure the select element is available and select the option by visible text
-        await this.SelectElementByVisibleText(this.ddSkills,value);
-        
-        // Log success after selecting the skill
-        logInfo(`Successfully selected the skill with visible text: ${value}`);
-    } catch (error) {
-        // Log the error and rethrow it for further handling
-        logError(`Error selecting skill with visible text: ${value}. Error: ${error.message}`);
-        throw new Error(`Failed to select skill with value "${value}": ${error.message}`);
+    /**
+  * @description Selects a skill from a dropdown by its visible text.
+  * @param {string} value - The visible text of the skill to be selected from the dropdown.
+  * @throws {Error} Throws error if the selection fails or if any issue occurs while selecting the skill.
+  */
+    async selectSkills(value) {
+
+        try {
+            // Log the action being performed
+            logInfo(`Attempting to select skill with visible text: ${value}`);
+
+            // Ensure the select element is available and select the option by visible text
+            await this.SelectElementByVisibleText(this.ddSkills, value);
+
+            // Log success after selecting the skill
+            logInfo(`Successfully selected the skill with visible text: ${value}`);
+        } catch (error) {
+            // Log the error and rethrow it for further handling
+            logError(`Error selecting skill with visible text: ${value}. Error: ${error.message}`);
+            throw new Error(`Failed to select skill with value "${value}": ${error.message}`);
+        }
     }
-}
 
     /**
      * @description Enter the email in the email input field.

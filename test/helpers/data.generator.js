@@ -1,10 +1,10 @@
 import { faker } from '@faker-js/faker';
-import area from '../data/areacode.json' assert { type: 'json' };  // For JSON imports
-import datafeed from '../data/data.feed.json' assert { type: 'json' }; // For JSON imports
-import {logError} from './logger.helper';
+import area from '../data/areacode.json' with { type: 'json' };  // For JSON imports
+import datafeed from '../data/data.feed.json' with { type: 'json' }; // For JSON imports
+import { logError } from './logger.helper';
 
 class DataGenerator {
-    
+
     /**
      * @description Generates a valid random user name with any length for each part of the name (first, last, middle).
      * @returns {Object} An object containing randomly generated first, middle, and last names.
@@ -101,25 +101,25 @@ class DataGenerator {
             return {
                 // Short password (less than 8 characters)
                 shortPassword: faker.string.alphanumeric(4),  // Generates a short password with 4 characters (e.g., "hfs9")
-                
+
                 // Password with no numbers
                 noNumberPassword: faker.string.alpha(10),  // Generates a 10-character password with only alphabetic characters (e.g., "passwordabc")
-                
+
                 // Password with no special characters (letters and digits only)
                 noSpecialPassword: faker.string.alphanumeric(12),  // 12-character alphanumeric string without special characters
-                
+
                 // Password with only special characters (invalid in many cases)
                 specialCharsOnlyPassword: faker.helpers.arrayElement(['@', '#', '!', '&', '*']) + faker.helpers.arrayElement(['$', '%', '^', '&', '*']),  // 2 special characters (e.g., "@$")
-    
+
                 // Password with weak pattern (short and only lowercase letters)
                 weakPatternPassword: faker.string.alpha(6),  // Generates 6-character password with lowercase letters only (e.g., "abcxyz")
-                
+
                 // Password with random mix of numbers, letters, and symbols (too complex)
                 complexInvalidPassword: faker.string.alphanumeric(3) + faker.helpers.arrayElement(['@', '#', '%', '!']) + faker.string.alphanumeric(5),  // Mixed alphanumeric with symbols (e.g., "3#4n1!")
-    
+
                 // Password with only numbers (in some cases it might be invalid)
                 numbersOnlyPassword: faker.string.numeric(8),  // 8-digit number password (e.g., "12345678")
-                
+
                 // Password with missing uppercase characters (invalid for some systems)
                 noUppercasePassword: faker.string.alpha(10).toLowerCase(),  // Only lowercase letters (e.g., "abcdefghij")
             };
@@ -142,8 +142,8 @@ class DataGenerator {
                 state: faker.string.alpha(3) + faker.helpers.arrayElement(['@', '#', '$', '%']),
                 postalCode: faker.string.alpha(3) + faker.string.numeric(3) + faker.helpers.arrayElement(['!', '@', '#']),
                 fullAddress: faker.string.alpha(4) + faker.string.numeric(2) + " " +
-                             faker.string.alpha(3) + faker.helpers.arrayElement(['#', '$', '%']) + " " +
-                             faker.string.numeric(3) + faker.helpers.arrayElement(['@', '!', '?'])
+                    faker.string.alpha(3) + faker.helpers.arrayElement(['#', '$', '%']) + " " +
+                    faker.string.numeric(3) + faker.helpers.arrayElement(['@', '!', '?'])
             };
         } catch (error) {
             logError("Error generating invalid address:", error);
@@ -278,83 +278,83 @@ class DataGenerator {
  * @throws {Error} Throws error if there is an issue retrieving country data.
  */
     validCountry() {
-    try {
-        const countries = datafeed.countries;  // Access the "countries" array from the JSON
-        return faker.helpers.arrayElement(countries);  // Select a random country
-    } catch (error) {
-        logError("Error generating valid country:", error);
-        throw error;
-    }
-}
-
-/**
- * @description Generates a random language from the available language options in the datafeed.
- * @returns {string} A randomly selected language from the datafeed.
- * @throws {Error} Throws error if there is an issue retrieving language data.
- */
-validLanguage() {
-    try {
-        const languages = datafeed.languages;  // Access the "languages" array from the JSON
-        return faker.helpers.arrayElement(languages);  // Select a random language
-    } catch (error) {
-        logError("Error generating valid language:", error);
-        throw error;
-    }
-}
-
-/**
- * @description Generates a random value from the given list of options.
- * @param {Array} dataList - An array of values (e.g., skills, countries, etc.) to choose from.
- * @returns {string} A randomly selected value from the list.
- * @throws {Error} Throws error if there is an issue selecting a value.
- */
- validValue(dataList) {
-    try {
-        // Ensure dataList is an array and has values
-        if (!Array.isArray(dataList) || dataList.length === 0) {
-            throw new Error('The data list is empty or not an array');
+        try {
+            const countries = datafeed.countries;  // Access the "countries" array from the JSON
+            return faker.helpers.arrayElement(countries);  // Select a random country
+        } catch (error) {
+            logError("Error generating valid country:", error);
+            throw error;
         }
-        
-        return faker.helpers.arrayElement(dataList);  // Select a random value from the array
-    } catch (error) {
-        logError("Error generating valid value:", error);
-        throw error;
     }
-}
 
-/**
- * @description Generates a list of random values from the provided array.
- * @param {Array} array - The array of available values (could be skills, countries, etc.).
- * @param {number} numberOfItems - The number of random items to return.
- * @returns {Array} A list of randomly selected items from the array.
- * @throws {Error} Throws error if there is an issue retrieving the data.
- */
- validArray(array, numberOfItems) {
-    try {
-        // Ensure the numberOfItems does not exceed the available items in the array
-        const numberToSelect = Math.min(numberOfItems, array.length);
+    /**
+     * @description Generates a random language from the available language options in the datafeed.
+     * @returns {string} A randomly selected language from the datafeed.
+     * @throws {Error} Throws error if there is an issue retrieving language data.
+     */
+    validLanguage() {
+        try {
+            const languages = datafeed.languages;  // Access the "languages" array from the JSON
+            return faker.helpers.arrayElement(languages);  // Select a random language
+        } catch (error) {
+            logError("Error generating valid language:", error);
+            throw error;
+        }
+    }
 
-        // Generate an array with random items
-        const selectedItems = [];
-
-        // Loop to select the desired number of random items
-        for (let i = 0; i < numberToSelect; i++) {
-            const randomItem = faker.helpers.arrayElement(array);  // Select a random item
-            // Ensure the selected item is not duplicated
-            if (!selectedItems.includes(randomItem)) {
-                selectedItems.push(randomItem);
-            } else {
-                // If duplicate is found, retry by decrementing the counter
-                i--;
+    /**
+     * @description Generates a random value from the given list of options.
+     * @param {Array} dataList - An array of values (e.g., skills, countries, etc.) to choose from.
+     * @returns {string} A randomly selected value from the list.
+     * @throws {Error} Throws error if there is an issue selecting a value.
+     */
+    validValue(dataList) {
+        try {
+            // Ensure dataList is an array and has values
+            if (!Array.isArray(dataList) || dataList.length === 0) {
+                throw new Error('The data list is empty or not an array');
             }
-        }
 
-        return selectedItems;
-    } catch (error) {
-        logError("Error generating valid array:", error);
-        throw error;
+            return faker.helpers.arrayElement(dataList);  // Select a random value from the array
+        } catch (error) {
+            logError("Error generating valid value:", error);
+            throw error;
+        }
     }
-}
+
+    /**
+     * @description Generates a list of random values from the provided array.
+     * @param {Array} array - The array of available values (could be skills, countries, etc.).
+     * @param {number} numberOfItems - The number of random items to return.
+     * @returns {Array} A list of randomly selected items from the array.
+     * @throws {Error} Throws error if there is an issue retrieving the data.
+     */
+    validArray(array, numberOfItems) {
+        try {
+            // Ensure the numberOfItems does not exceed the available items in the array
+            const numberToSelect = Math.min(numberOfItems, array.length);
+
+            // Generate an array with random items
+            const selectedItems = [];
+
+            // Loop to select the desired number of random items
+            for (let i = 0; i < numberToSelect; i++) {
+                const randomItem = faker.helpers.arrayElement(array);  // Select a random item
+                // Ensure the selected item is not duplicated
+                if (!selectedItems.includes(randomItem)) {
+                    selectedItems.push(randomItem);
+                } else {
+                    // If duplicate is found, retry by decrementing the counter
+                    i--;
+                }
+            }
+
+            return selectedItems;
+        } catch (error) {
+            logError("Error generating valid array:", error);
+            throw error;
+        }
+    }
 }
 
 export default new DataGenerator();

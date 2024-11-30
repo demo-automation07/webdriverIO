@@ -3,8 +3,8 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const allure = require('allure-commandline');
 const allure_directory = 'report/allure-report';
-const json_directory = "report/json-report"
-import mergeResults from '@wdio/json-reporter/mergeResults'
+const json_directory = "report/json-report";
+import mergeResults from '@wdio/json-reporter/mergeResults';
 const fs = require('fs');
 const path = require('path');
 
@@ -37,18 +37,18 @@ export const config = {
         './test/specs/**/*.js'
     ],
 
-    suites : {
-        TC_smoke : [
+    suites: {
+        TC_smoke: [
             './test/specs/automationdemosite/test.registration.js',
             './test/specs/automationdemosite/test.registrationMandatory.js'
         ],
-        TC_regresion : [
+        TC_regresion: [
             './test/specs/automationdemosite/test.registration.js',
             './test/specs/automationdemosite/test.registrationMandatory.js',
             './test/specs/practiceautomation/test.login.js',
-             './test/specs/facebook/test.forgotpassword.js'
+            './test/specs/facebook/test.forgotpassword.js'
         ],
-        TC_end2end :[
+        TC_end2end: [
             './test/specs/facebook/test.forgotpassword.js',
             './test/specs/practiceautomation/test.login.js'
         ]
@@ -81,7 +81,7 @@ export const config = {
     //
     capabilities: [{
         // capabilities for local browser web tests
-       
+
         maxInstances: 1,
         //
         browserName: 'chrome',
@@ -90,18 +90,18 @@ export const config = {
             args: ['--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage', '--window-size=1920,1080', '--ignore-certificate-errors']
         },
     },
-    // {
-    //     browserName: 'firefox', // Use Firefox browser
-    //     "moz:firefoxOptions": {
-    //         args: ['-headless']
-    //     }
-    // },
-    // {
-    //     browserName: 'safari', // Use Safari browser
-    //     'safari.options': {
-    //         technologyPreview: false
-    //     }
-    // }
+        // {
+        //     browserName: 'firefox', // Use Firefox browser
+        //     "moz:firefoxOptions": {
+        //         args: ['-headless']
+        //     }
+        // },
+        // {
+        //     browserName: 'safari', // Use Safari browser
+        //     'safari.options': {
+        //         technologyPreview: false
+        //     }
+        // }
     ],
 
     //
@@ -146,16 +146,16 @@ export const config = {
     //
     // Default request retries count
     connectionRetryCount: 3,
-    assertionTimeout: 5000, 
+    assertionTimeout: 5000,
     //
     // Test runner services
     // Services take over a specific job you don't want to take care of. They enhance
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
-    services: ['chromedriver', 
-                // 'geckodriver', 
-                // 'safaridriver'
-              ],
+    services: ['chromedriver',
+        // 'geckodriver', 
+        // 'safaridriver'
+    ],
     //
     // Framework you want to run your specs with.
     // The following are supported: Mocha, Jasmine, and Cucumber
@@ -164,7 +164,7 @@ export const config = {
     // Make sure you have the wdio adapter package for the specific framework installed
     // before running any tests.
     framework: 'mocha',
-    
+
     //
     // The number of times to retry the entire specfile when it fails as a whole
     // specFileRetries: 1,
@@ -189,12 +189,12 @@ export const config = {
         ['json', {
             outputDir: './report/json-report',
             outputFileFormat: (opts) => {
-               // const specName = path.basename(opts.specs[0], '.js');
-              //  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+                // const specName = path.basename(opts.specs[0], '.js');
+                //  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
                 const timestamp = "";
-                return `results-[${opts.cid}]-${opts.capabilities.browserName}.json`
+                return `results-[${opts.cid}]-${opts.capabilities.browserName}.json`;
             },
-            
+
             combined: true
         }]
     ],
@@ -220,8 +220,8 @@ export const config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      */
     // onPrepare: function (config, capabilities) {
-       
-        
+
+
     // },
     /**
      * Gets executed before a worker process is spawned and can be used to initialize specific service
@@ -251,11 +251,11 @@ export const config = {
      * @param {Array.<String>} specs List of spec file paths that are to be run
      * @param {string} cid worker id (e.g. 0-0)
      */
-     // Hook before session starts to handle environment-specific configurations
+    // Hook before session starts to handle environment-specific configurations
     //  beforeSession: async function (config, capabilities, specs, cid) {
-       
+
     // },
-    
+
     /**
      * Gets executed before test execution begins. At this point you can access to all global
      * variables like `browser`. It is the perfect place to define custom commands.
@@ -263,9 +263,9 @@ export const config = {
      * @param {Array.<String>} specs        List of spec file paths that are to be run
      * @param {object}         browser      instance of created browser/device session
      */
-    
+
     // before: async function (capabilities, specs) {
- 
+
     // },
     /**
      * Runs before a WebdriverIO command gets executed.
@@ -279,13 +279,13 @@ export const config = {
      * @param {object} suite suite details
      */
     // beforeSuite: async function (suite) {
-      
+
     // },
     /**
      * Function to be executed before a test (in Mocha/Jasmine) starts.
      */
     // beforeTest: function (test, context) {
-       
+
     // },
     /**
      * Hook that gets executed _before_ a hook within the suite starts (e.g. runs before calling
@@ -310,11 +310,11 @@ export const config = {
      * @param {object}  result.retries   information about spec related retries, e.g. `{ attempts: 0, limit: 0 }`
      */
     afterTest: async function (test, context, { error, result, duration, passed, retries }) {
-        
+
         if (!passed || error) {
             await browser.takeScreenshot();
         }
-        
+
 
     },
 
@@ -360,26 +360,26 @@ export const config = {
      * @param {<Object>} results object containing test results
      */
     onComplete: function (exitCode, config, capabilities, results) {
-        mergeResults(json_directory, 'results-.*.json', 'combined-report.json')
-        const reportError = new Error('Could not generate Allure report')
-        const generation = allure(['generate', allure_directory + '/allure-results', '--clean', '-o', allure_directory + '/allure-report'])
+        mergeResults(json_directory, 'results-.*.json', 'combined-report.json');
+        const reportError = new Error('Could not generate Allure report');
+        const generation = allure(['generate', allure_directory + '/allure-results', '--clean', '-o', allure_directory + '/allure-report']);
 
         return new Promise((resolve, reject) => {
             const generationTimeout = setTimeout(
                 () => reject(reportError),
-                5000)
+                5000);
 
             generation.on('exit', function (exitCode) {
-                clearTimeout(generationTimeout)
+                clearTimeout(generationTimeout);
 
                 if (exitCode !== 0) {
-                    return reject(reportError)
+                    return reject(reportError);
                 }
 
-                console.log('Allure report successfully generated')
-                resolve()
-            })
-        })
+                console.log('Allure report successfully generated');
+                resolve();
+            });
+        });
     },
     /**
     * Gets executed when a refresh happens.
@@ -400,4 +400,4 @@ export const config = {
     */
     // afterAssertion: function(params) {
     // }
-}
+};

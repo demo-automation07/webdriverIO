@@ -10,6 +10,7 @@ const path = require('path');
 
 
 
+
 export const config = {
     //
     // ====================
@@ -36,19 +37,19 @@ export const config = {
         '../test/specs/**/*.js'
     ],
 
-    suites : {
-        TC_smoke : [
+    suites: {
+        TC_smoke: [
             '../test/specs/automationdemosite/test.registration.js',
             '../test/specs/automationdemosite/test.registrationMandatory.js'
         ],
-        TC_regresion : [
+        TC_regresion: [
             '../test/specs/automationdemosite/test.registration.js',
             '../test/specs/automationdemosite/test.registrationMandatory.js',
             '../test/specs/practiceautomation/test.login.js',
             // '../test/specs/facebook/test.forgotpassword.js'
         ],
-        TC_end2end :[
-           // '../test/specs/facebook/test.forgotpassword.js',
+        TC_end2end: [
+            // '../test/specs/facebook/test.forgotpassword.js',
             '../test/specs/practiceautomation/test.login.js'
         ]
     },
@@ -80,7 +81,7 @@ export const config = {
     //
     capabilities: [{
         // capabilities for local browser web tests
-       
+
         maxInstances: 1,
         //
         browserName: 'chrome',
@@ -133,7 +134,7 @@ export const config = {
     //
     // Default request retries count
     connectionRetryCount: 3,
-    assertionTimeout: 5000, 
+    assertionTimeout: 5000,
     //
     // Test runner services
     // Services take over a specific job you don't want to take care of. They enhance
@@ -148,7 +149,7 @@ export const config = {
     // Make sure you have the wdio adapter package for the specific framework installed
     // before running any tests.
     framework: 'mocha',
-    
+
     //
     // The number of times to retry the entire specfile when it fails as a whole
     // specFileRetries: 1,
@@ -162,7 +163,9 @@ export const config = {
     // Test reporter for stdout.
     // The only one supported by default is 'dot'
     // see also: https://webdriver.io/docs/dot-reporter
-    reporters: ['spec',
+    reporters: [
+        'dot',
+        'spec',
 
         ['allure', {
             outputDir: allure_directory + '/allure-results',
@@ -171,16 +174,17 @@ export const config = {
         }],
 
         ['json', {
-            outputDir: '../../report/json-report',
+            outputDir: json_directory,
             outputFileFormat: (opts) => {
-               // const specName = path.basename(opts.specs[0], '.js');
-              //  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-                const timestamp = "";
+                // const specName = path.basename(opts.specs[0], '.js');
+                //  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+                // const timestamp = "";
                 return `results-[${opts.cid}]-${opts.capabilities.browserName}.json`;
             },
-            
-            combined: true
-        }]
+
+            // combined: true
+        }],
+
     ],
 
     // Options to be passed to Mocha.
@@ -204,8 +208,8 @@ export const config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      */
     // onPrepare: function (config, capabilities) {
-       
-        
+
+
     // },
     /**
      * Gets executed before a worker process is spawned and can be used to initialize specific service
@@ -235,11 +239,11 @@ export const config = {
      * @param {Array.<String>} specs List of spec file paths that are to be run
      * @param {string} cid worker id (e.g. 0-0)
      */
-     // Hook before session starts to handle environment-specific configurations
-    //  beforeSession: async function (config, capabilities, specs, cid) {
-       
+    // Hook before session starts to handle environment-specific configurations
+    // beforeSession: async function (config, capabilities, specs, cid) {
+
     // },
-    
+
     /**
      * Gets executed before test execution begins. At this point you can access to all global
      * variables like `browser`. It is the perfect place to define custom commands.
@@ -247,9 +251,9 @@ export const config = {
      * @param {Array.<String>} specs        List of spec file paths that are to be run
      * @param {object}         browser      instance of created browser/device session
      */
-    
+
     // before: async function (capabilities, specs) {
- 
+
     // },
     /**
      * Runs before a WebdriverIO command gets executed.
@@ -263,13 +267,13 @@ export const config = {
      * @param {object} suite suite details
      */
     // beforeSuite: async function (suite) {
-      
+
     // },
     /**
      * Function to be executed before a test (in Mocha/Jasmine) starts.
      */
     // beforeTest: function (test, context) {
-       
+
     // },
     /**
      * Hook that gets executed _before_ a hook within the suite starts (e.g. runs before calling
@@ -294,11 +298,12 @@ export const config = {
      * @param {object}  result.retries   information about spec related retries, e.g. `{ attempts: 0, limit: 0 }`
      */
     afterTest: async function (test, context, { error, result, duration, passed, retries }) {
-        
+
+        await browser.takeScreenshot();
         if (!passed || error) {
             await browser.takeScreenshot();
         }
-        
+
 
     },
 
@@ -334,6 +339,7 @@ export const config = {
      * @param {Array.<String>} specs List of spec file paths that ran
      */
     // afterSession: function (config, capabilities, specs) {
+
     // },
     /**
      * Gets executed after all workers got shut down and the process is about to exit. An error
@@ -344,7 +350,16 @@ export const config = {
      * @param {<Object>} results object containing test results
      */
     onComplete: function (exitCode, config, capabilities, results) {
-        mergeResults(json_directory, 'results-.*.json', 'combined-report.json');
+
+        
+        // Merge the individual results into a combined report
+        try {
+            mergeResults(json_directory, '.*results-.*', 'combined-result.json');
+            console.log('JSON reports successfully merged');
+        } catch (err) {
+            console.error('Error merging JSON reports:', err);
+            return;
+        }
         const reportError = new Error('Could not generate Allure report');
         const generation = allure(['generate', allure_directory + '/allure-results', '--clean', '-o', allure_directory + '/allure-report']);
 
@@ -364,6 +379,8 @@ export const config = {
                 resolve();
             });
         });
+
+
     },
     /**
     * Gets executed when a refresh happens.

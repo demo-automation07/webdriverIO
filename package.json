@@ -7,6 +7,7 @@
     "@eslint/js": "^9.16.0",
     "@wdio/allure-reporter": "^9.2.2",
     "@wdio/cli": "^9.2.11",
+    "@wdio/dot-reporter": "^9.2.14",
     "@wdio/local-runner": "^9.2.11",
     "@wdio/mocha-framework": "^9.2.8",
     "@wdio/spec-reporter": "^9.2.8",
@@ -38,7 +39,6 @@
     "test:crossbrowser": "wdio run ./config/wdio.conf.crossbrowser.js",
     "test:qa_crossbrowser": "wdio run ./config/wdio.conf.crossbrowser.js --stagingEnv qa",
     "test:qa_envurl": "wdio run ./config/wdio.conf.envUrl.js --stagingEnv qa",
-
     "lint:fix": "npx eslint --fix ."
   },
   "_comment": "This section defines the scripts to run different test environments and suites.",

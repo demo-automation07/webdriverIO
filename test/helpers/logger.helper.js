@@ -34,7 +34,7 @@ class LoggerHelper {
           }),
           // File transport for logging to a file
           new winston.transports.File({
-            filename: '../logs/test.log', // Specify file to store logs
+            filename: './logs/test.log', // Specify file to store logs
             level: 'info', // Log level for file logging
             maxsize: 5242880, // Max file size of 5MB for each log file
             maxFiles: 5, // Keep only the last 5 log files

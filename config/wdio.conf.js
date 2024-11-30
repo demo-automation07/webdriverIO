@@ -46,10 +46,10 @@ export const config = {
             '../test/specs/automationdemosite/test.registration.js',
             '../test/specs/automationdemosite/test.registrationMandatory.js',
             '../test/specs/practiceautomation/test.login.js',
-            // '../test/specs/facebook/test.forgotpassword.js'
+            '../test/specs/facebook/test.forgotpassword.js'
         ],
         TC_end2end: [
-            // '../test/specs/facebook/test.forgotpassword.js',
+            '../test/specs/facebook/test.forgotpassword.js',
             '../test/specs/practiceautomation/test.login.js'
         ]
     },

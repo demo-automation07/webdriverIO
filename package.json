@@ -20,7 +20,8 @@
     "eslint-plugin-mocha": "^10.5.0",
     "fs": "^0.0.1-security",
     "globals": "^15.12.0",
-    "moment": "^2.29.4"
+    "moment": "^2.29.4",
+    "wdio-video-reporter": "^6.1.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -39,6 +40,7 @@
     "test:crossbrowser": "wdio run ./config/wdio.conf.crossbrowser.js",
     "test:qa_crossbrowser": "wdio run ./config/wdio.conf.crossbrowser.js --stagingEnv qa",
     "test:qa_envurl": "wdio run ./config/wdio.conf.envUrl.js --stagingEnv qa",
+    "test:allure_videoReport": "npx wdio ./config/wdio.conf.videoReport.js --suite TC_smoke",
     "lint:fix": "npx eslint --fix ."
   },
   "_comment": "This section defines the scripts to run different test environments and suites.",

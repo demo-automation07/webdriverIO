@@ -4,7 +4,9 @@ const require = createRequire(import.meta.url);
 const allure = require('allure-commandline');
 const allure_directory = './report/allure';
 const json_directory = "./report/json-report";
+const timeline_directory = "./report/timeline_report";
 import mergeResults from '@wdio/json-reporter/mergeResults';
+const { TimelineService } = require('wdio-timeline-reporter/timeline-service');
 const fs = require('fs');
 const path = require('path');
 
@@ -140,7 +142,7 @@ export const config = {
     // Services take over a specific job you don't want to take care of. They enhance
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
-    services: ['chromedriver'],
+    services: ['chromedriver',[TimelineService]],
     //
     // Framework you want to run your specs with.
     // The following are supported: Mocha, Jasmine, and Cucumber
@@ -184,6 +186,18 @@ export const config = {
 
             // combined: true
         }],
+        ['timeline', 
+            { outputDir: timeline_directory ,
+              fileNamw: 'timeline-report.html',
+              embedImages: true,
+              images:{
+                quality: 80,
+                resize: false,
+                reductionRatio: 2
+              },
+            screenshotStrategy: 'on:error'
+
+        }]
 
     ],
 
@@ -207,10 +221,17 @@ export const config = {
      * @param {object} config wdio configuration object
      * @param {Array.<Object>} capabilities list of capabilities details
      */
-    // onPrepare: function (config, capabilities) {
+    onPrepare: function (config, capabilities) {
+        fs.rmdir("./report", { recursive: true, force: true }, (err) => {
 
+            if (err) {
+                return console.log("error occurred in deleting directory", err);
+            }
 
-    // },
+            console.log("Directory deleted successfully");
+        });
+
+    },
     /**
      * Gets executed before a worker process is spawned and can be used to initialize specific service
      * for that worker as well as modify runtime environments in an async fashion.
@@ -366,7 +387,7 @@ export const config = {
         return new Promise((resolve, reject) => {
             const generationTimeout = setTimeout(
                 () => reject(reportError),
-                5000);
+                10000);
 
             generation.on('exit', function (exitCode) {
                 clearTimeout(generationTimeout);

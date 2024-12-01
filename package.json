@@ -58,6 +58,7 @@
     "wdio-geckodriver-service": "^5.0.2",
     "wdio-json-reporter": "^4.0.1",
     "wdio-safaridriver-service": "^2.1.1",
+    "wdio-timeline-reporter": "^5.1.0",
     "winston": "^3.17.0"
   }
 }

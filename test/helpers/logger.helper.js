@@ -1,6 +1,5 @@
 import winston from 'winston';
 import { addStep } from '@wdio/allure-reporter';
-
 class LoggerHelper {
   constructor() {
     this.logger = this.createLogger(); // Initialize logger when an instance of LoggerHelper is created

@@ -10,9 +10,6 @@ const { TimelineService } = require('wdio-timeline-reporter/timeline-service');
 const fs = require('fs');
 const path = require('path');
 
-
-
-
 export const config = {
     //
     // ====================
@@ -84,7 +81,7 @@ export const config = {
     capabilities: [{
         // capabilities for local browser web tests
 
-        maxInstances: 1,
+        maxInstances: 2,
         //
         browserName: 'chrome',
 
@@ -222,14 +219,13 @@ export const config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      */
     onPrepare: function (config, capabilities) {
-        fs.rmdir("./report", { recursive: true, force: true }, (err) => {
-
-            if (err) {
-                return console.log("error occurred in deleting directory", err);
-            }
-
-            console.log("Directory deleted successfully");
-        });
+        // fs.rm("./report", { recursive: true, force: true }, (err) => {
+        //     if (err) {
+        //         return console.log("error occurred in deleting directory", err);
+        //     }
+        
+        //     console.log("Directory deleted successfully");
+        // });
 
     },
     /**
@@ -250,8 +246,9 @@ export const config = {
      * @param  {object} specs    specs to be run in the worker process
      * @param  {number} retries  number of retries used
      */
-    // onWorkerEnd: function (cid, exitCode, specs, retries) {
-    // },
+    onWorkerEnd: function (cid, exitCode, specs, retries) {
+        console.log('qywgei');
+    },
     /**
      * Gets executed just before initialising the webdriver session and test framework. It allows you
      * to manipulate configurations depending on the capability or spec.
@@ -262,7 +259,8 @@ export const config = {
      */
     // Hook before session starts to handle environment-specific configurations
     // beforeSession: async function (config, capabilities, specs, cid) {
-
+    //     jsonResultSet=`[${cid}]-${capabilities.browserName}`;
+        
     // },
 
     /**
@@ -319,12 +317,10 @@ export const config = {
      * @param {object}  result.retries   information about spec related retries, e.g. `{ attempts: 0, limit: 0 }`
      */
     afterTest: async function (test, context, { error, result, duration, passed, retries }) {
-
-        await browser.takeScreenshot();
+        
         if (!passed || error) {
             await browser.takeScreenshot();
         }
-
 
     },
 

@@ -21,6 +21,8 @@
     "fs": "^0.0.1-security",
     "globals": "^15.12.0",
     "moment": "^2.29.4",
+    "nodemailer": "^6.9.16",
+    "nodemailer-smtp-transport": "^2.7.4",
     "wdio-video-reporter": "^6.1.1"
   },
   "scripts": {
@@ -41,6 +43,7 @@
     "test:qa_crossbrowser": "wdio run ./config/wdio.conf.crossbrowser.js --stagingEnv qa",
     "test:qa_envurl": "wdio run ./config/wdio.conf.envUrl.js --stagingEnv qa",
     "test:allure_videoReport": "npx wdio ./config/wdio.conf.videoReport.js --suite TC_smoke",
+    "send_email": "node ./test/utils/mail.generator.js",
     "lint:fix": "npx eslint --fix ."
   },
   "_comment": "This section defines the scripts to run different test environments and suites.",

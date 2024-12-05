@@ -201,17 +201,13 @@ export const config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      */
     onPrepare: function (config, capabilities) {
-        if (fs.existsSync(dirPath)) {
-            fs.rm(dirPath, { recursive: true, force: true }, (err) => {
-                if (err) {
-                    console.log("Error occurred in deleting directory", err);
-                } else {
-                    console.log("Directory deleted successfully");
-                }
-            });
-        } else {
-            console.log("Directory does not exist, no need to delete");
-        }
+        fs.rm(dirPath, { recursive: true, force: true }, (err) => {
+            if (err) {
+                console.log("Error occurred while deleting directory:", err);
+            } else {
+                console.log("Directory deleted successfully");
+            }
+        });
 
     },
     /**

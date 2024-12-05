@@ -7,7 +7,7 @@ import mergeResults from '@wdio/json-reporter/mergeResults';
 const { TimelineService } = require('wdio-timeline-reporter/timeline-service');
 const fs = require('fs');
 const path = require('path');
-
+const dirPath = './report/json_report';
 export const config = {
     //
     // ====================
@@ -201,13 +201,17 @@ export const config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      */
     onPrepare: function (config, capabilities) {
-        fs.rm("./report", { recursive: true, force: true }, (err) => {
-            if (err) {
-                return console.log("error occurred in deleting directory", err);
-            }
-        
-            console.log("Directory deleted successfully");
-        });
+        if (fs.existsSync(dirPath)) {
+            fs.rm(dirPath, { recursive: true, force: true }, (err) => {
+                if (err) {
+                    console.log("Error occurred in deleting directory", err);
+                } else {
+                    console.log("Directory deleted successfully");
+                }
+            });
+        } else {
+            console.log("Directory does not exist, no need to delete");
+        }
 
     },
     /**

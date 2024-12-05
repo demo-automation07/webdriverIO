@@ -10,7 +10,7 @@ export const config = deepmerge(baseconfig.config, {
         '../test/specs/automationdemosite/test.registration.js',
         '../test/specs/automationdemosite/test.registrationMandatory.js'
     ],
-    TC_regresion: [
+    TC_regression: [
         '../test/specs/automationdemosite/test.registration.js',
         '../test/specs/automationdemosite/test.registrationMandatory.js',
         '../test/specs/practiceautomation/test.login.js',

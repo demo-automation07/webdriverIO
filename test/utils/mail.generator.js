@@ -171,7 +171,7 @@ const sendEmail = async () => {
      // Conditionally attach PDF and HTML based on YML configuration
   if (reportData.attachPdfReportWithmail === 'yes') {
     mailOptions.attachments.push({
-      path: './report/json_report/report\json-report\final-report.pdf', // Path to your PDF file
+      path: './report/json_report/final-report.pdf', // Path to your PDF file
       contentType: 'application/pdf',
     });
   }

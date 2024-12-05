@@ -2,7 +2,7 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const allure = require('allure-commandline');
-import { allureReportDirectory,jsonReportDirectory,timelineReportDirectory } from './directory.js'
+import { allureReportDirectory,jsonReportDirectory,timelineReportDirectory } from './configuration.js'
 import mergeResults from '@wdio/json-reporter/mergeResults';
 const { TimelineService } = require('wdio-timeline-reporter/timeline-service');
 const fs = require('fs');
@@ -70,7 +70,7 @@ export const config = {
     // and 30 processes will get spawned. The property handles how many capabilities
     // from the same test should run tests.
     //
-    // maxInstances: 10,
+    maxInstances: 1,
     //
     // If you have trouble getting all important capabilities together, check out the
     // Sauce Labs platform configurator - a great tool to configure your capabilities:
@@ -79,7 +79,7 @@ export const config = {
     capabilities: [{
         // capabilities for local browser web tests
 
-        maxInstances: 2,
+        maxInstances: 1,
         //
         browserName: 'chrome',
 

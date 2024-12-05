@@ -1,0 +1,74 @@
+pipeline {
+    agent any  // Runs on any available agent
+
+    environment {
+        // Set the workspace directory to the desired path
+        WORKSPACE_DIR = 'C:/JenkinsDemo/Pipeline'
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                script {
+                    // Checkout the Git repository
+                    echo 'Cloning Git repository...'
+                    git url: 'https://github.com/demo-automation07/webdriverIO.git', branch: 'main'
+                }
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                script {
+                    // Set the working directory to the workspace directory
+                    echo 'Installing dependencies...'
+                    dir(WORKSPACE_DIR) {
+                        // Run npm install to install project dependencies
+                        bat 'npm install'
+                    }
+                }
+            }
+        }
+
+        stage('Run QA Tests') {
+            steps {
+                script {
+                    echo 'Running smoke tests...'
+                    dir(WORKSPACE_DIR) {
+                        // Run smoke tests using npm run test:smoke
+                        bat 'npm run test:qa',
+                        bat 'npm run pdf:report'
+                    }
+                }
+            }
+        }
+
+        stage('Run UAT End-to-End Tests') {
+            steps {
+                script {
+                    echo 'Running UAT End-to-End tests...'
+                    dir(WORKSPACE_DIR) {
+                        // Run UAT end-to-end tests using npm run test:uat_end2end
+                        bat 'npm run test:qa',
+                        bat 'npm run send_email'
+                    }
+                }
+            }
+        }
+
+       
+    }
+
+    post {
+        always {
+            // Always clean up and perform final actions, e.g., notify on success/failure
+            echo 'Pipeline execution completed.'
+        }
+        success {
+            echo 'Pipeline finished successfully.'
+        }
+        failure {
+            echo 'Pipeline failed. Check logs for details.'
+        }
+    }
+}

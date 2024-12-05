@@ -7,7 +7,7 @@ import { logInfo } from '../../helpers/logger.helper.js';
 import { getStagingEnv } from '../../utils/envParam.js';
 import configData from '../../../config/config.json' with { type: 'json' };
 
-describe("validate forgot password", function () {
+describe("Verify user able to update the password with otp", function () {
     const data = configData[getStagingEnv()].facebooksite;
 
     before('before starting teststeps', async () => {
@@ -28,7 +28,7 @@ describe("validate forgot password", function () {
 
     });
 
-    it('continue and send otp', async function () {
+    it('Continue and send otp', async function () {
         await landingPage.submit();
     });
 

@@ -66,6 +66,7 @@ class LoginPage extends actionhelper {
      */
     async getErrorMessage() {
         try {
+            await this.waitForPageToLoad();
             return await this.getTextFromElement(this.errorMessage);  // Get the text of the error message
         } catch (error) {
             logError(`Login failed with error message${error.message}`);

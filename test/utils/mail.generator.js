@@ -9,7 +9,7 @@ const reportData = yaml.load(fs.readFileSync('./reportingConfig/reportconfig.yml
 
 const data = fs.readFileSync(jsonReportDirectory + `/combined-result.json`);
 const jsonData = JSON.parse(data);
-0
+0;
 var totalTestCasePlanned = jsonData.suites.length;
 
 
@@ -25,39 +25,39 @@ var suiteMap = new Map();
 for (var i = 0; i < jsonData.suites.length; i++) {
   var suiteName = jsonData.suites[i].name;
   var result = jsonData.suites[i].tests.map((value, ind) => value.state);
-  let status = result.every((val) => {
-    return (val === "passed")
-  })
+  const status = result.every((val) => {
+    return (val === "passed");
+  });
 
   if (status) {
-    suiteMap.set(suiteName, "passed")
+    suiteMap.set(suiteName, "passed");
   } else {
     if (result.includes("failed")) {
-      suiteMap.set(suiteName, "failed")
+      suiteMap.set(suiteName, "failed");
     } else if (result.includes("skipped")) {
-      suiteMap.set(suiteName, "failed")
+      suiteMap.set(suiteName, "failed");
     } else {
-      suiteMap.set(suiteName, "status unknown")
+      suiteMap.set(suiteName, "status unknown");
     }
   }
 
 }
 
 var totalTestCaseExecuted = jsonData.suites.length;
-var totalTestCasePassed = 0
-var totalTestCaseFailed = 0
-var totalTestCaseSkipped = 0
-var totalTestCaseStatusUnknown = 0
+var totalTestCasePassed = 0;
+var totalTestCaseFailed = 0;
+var totalTestCaseSkipped = 0;
+var totalTestCaseStatusUnknown = 0;
 
 suiteMap.forEach(function (value, key) {
   if (value === "passed") {
-    totalTestCasePassed += 1
+    totalTestCasePassed += 1;
   } else if (value === "failed") {
-    totalTestCaseFailed += 1
+    totalTestCaseFailed += 1;
   } else if (value === "skipped") {
-    totalTestCaseSkipped += 1
+    totalTestCaseSkipped += 1;
   } else {
-    totalTestCaseStatusUnknown += 1
+    totalTestCaseStatusUnknown += 1;
   }
 });
 
@@ -189,6 +189,6 @@ const sendEmail = async () => {
     console.error('Error sending email:', error);
   }
 
-}
+};
 
 sendEmail();

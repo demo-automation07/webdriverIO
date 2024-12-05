@@ -33,6 +33,21 @@ class EnvParam {
         return suiteName;
     }
 
+    // Method to get the browser name (e.g., 'chrome', 'firefox', 'edge')
+    static getBrowserName() {
+        const param = process.argv.slice(2);  // Get command-line arguments
+        const index = param.indexOf('--browser');  // Find the --browser argument
+
+        if (index === -1 || !param[index + 1]) {  // If no --browser is provided or no value after it
+            logWarn('----Browser name not provided, defaulting to chrome');
+            return 'chrome';  // Default to chrome if no browser name is provided
+        }
+
+        const browserName = param[index + 1];  // Get the browser name (case insensitive)
+        logInfo(`Executing tests in browser: ${browserName}`);  // Log the selected browser
+        return browserName;  // Return the browser name
+    }
+
 
     // // Static method to get both the environment and suite configuration data
     // static getConfigEnvandSuite() {
@@ -63,5 +78,6 @@ class EnvParam {
 // Exporting the static methods separately
 export const getStagingEnv = EnvParam.getStagingEnv;
 export const getSuiteName = EnvParam.getSuiteName;
+export const getBrowserName = EnvParam.getBrowserName;
 // export const getConfigEnvandSuite = EnvParam.getConfigEnvandSuite;
 export default EnvParam;

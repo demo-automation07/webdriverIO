@@ -1,7 +1,7 @@
 // Import the config object from conf.js
 import { config as wdioconfig } from './wdio.conf.js';
 import { deepmerge } from 'deepmerge-ts';
-
+import { browserConfig } from './configuration.js';
 
 export const config = deepmerge(wdioconfig.config, {
   ...wdioconfig,
@@ -22,6 +22,7 @@ export const config = deepmerge(wdioconfig.config, {
       maxInstances: 1,
       'moz:firefoxOptions': {
         args: ['--headless', '--disable-gpu'], // Additional Firefox options
+        binary: browserConfig.firefoxPath
         // prefs: {
         //     'browser.download.folderList': 2,
         //     'browser.download.manager.showWhenStarting': false,

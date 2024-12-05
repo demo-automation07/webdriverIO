@@ -2,9 +2,9 @@ import fs from 'fs';
 import { format } from 'date-fns';
 
 const dirName = './report/json_report';
-import puppeteer from 'puppeteer'
+import puppeteer from 'puppeteer';
 
-import data from '../../report/json_report/combined-result.json' with { type: 'json' }
+import data from '../../report/json_report/combined-result.json' with { type: 'json' };
 
 function testingTime(dateFormat) {
 	const dateTimes = new Date(dateFormat);
@@ -37,11 +37,11 @@ function testSkipped() {
 			if (e.state == "skipped") {
 				passed = 2;
 			}
-		})
+		});
 		if (passed == 2) {
 			testfailed++;
 		}
-	})
+	});
 	return testfailed;
 }
 
@@ -53,11 +53,11 @@ function testFailed() {
 			if (e.state == "failed") {
 				passed = 1;
 			}
-		})
+		});
 		if (passed == 1) {
 			testfailed++;
 		}
-	})
+	});
 	return testfailed;
 }
 
@@ -69,12 +69,12 @@ var total = data.suites.length;
 var browser_Name = [];
 data.capabilities.forEach(b => {
 	browser_Name.push(b.browserName);
-})
+});
 
 var platformName = [];
 data.capabilities.forEach(b => {
 	platformName.push(b.platformName);
-})
+});
 
 function teastingEnvironment(arr) {
 	var obj = {};
@@ -184,27 +184,27 @@ let html = `
 <canvas id="myChart"></canvas>
 </div>
 </div>
-<div>`
+<div>`;
 const suites = data.suites;
 
 suites.forEach(element => {
-	html += `<p><b>Name</b> : ${element.name}</p>`
-	html += `<p><b>Duration</b> : ${milliseconds(`${element.duration}`)}</p>`
-	html += `<table style="width:100%"><tr><th style="background-color:#85c6ff;">steps</th><th>duration</th><th>result</th></tr>`
+	html += `<p><b>Name</b> : ${element.name}</p>`;
+	html += `<p><b>Duration</b> : ${milliseconds(`${element.duration}`)}</p>`;
+	html += `<table style="width:100%"><tr><th style="background-color:#85c6ff;">steps</th><th>duration</th><th>result</th></tr>`;
 
 	const test = element.tests;
 	test.forEach(testStep => {
 		if (testStep.state == "passed") {
-			html += `<tr><td>${testStep.name}</td><td>${milliseconds(`${testStep.duration}`)}</td><td class="result" style="color:#03C04A;">${testStep.state}</td>`
+			html += `<tr><td>${testStep.name}</td><td>${milliseconds(`${testStep.duration}`)}</td><td class="result" style="color:#03C04A;">${testStep.state}</td>`;
 		} else if (testStep.state == "failed") {
-			html += `<tr><td>${testStep.name}</td><td>${milliseconds(`${testStep.duration}`)}</td><td class="result" style="color:#D70040;">${testStep.state}</td>`
-			html += `<tr><td colspan="3"><b>Reason - </b>${testStep.error.message}</td></tr>`
+			html += `<tr><td>${testStep.name}</td><td>${milliseconds(`${testStep.duration}`)}</td><td class="result" style="color:#D70040;">${testStep.state}</td>`;
+			html += `<tr><td colspan="3"><b>Reason - </b>${testStep.error.message}</td></tr>`;
 		} else {
-			html += `<tr><td>${testStep.name}</td><td>${milliseconds(`${testStep.duration}`)}</td><td class="result" style="color:#facb4b;">${testStep.state}</td>`
+			html += `<tr><td>${testStep.name}</td><td>${milliseconds(`${testStep.duration}`)}</td><td class="result" style="color:#facb4b;">${testStep.state}</td>`;
 		}
 
 	});
-	html += `</table>`
+	html += `</table>`;
 });
 html += `</div></div>
 
@@ -266,7 +266,7 @@ var filepath = process.cwd()+`/report/json_report/final-report.html`;
 filepath = (filepath.replace('\\test\\utils','')).replaceAll('\\','/'); // to run in local environment
 function delay(time) {
 	return new Promise(function(resolve) { 
-		setTimeout(resolve, time)
+		setTimeout(resolve, time);
 	});
  }
 (async () => {

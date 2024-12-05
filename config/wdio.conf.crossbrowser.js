@@ -1,7 +1,7 @@
 // Import the config object from conf.js
 import { config as wdioconfig } from './wdio.conf.js';
 import { deepmerge } from 'deepmerge-ts';
-import { browserConfig } from './configuration.js';
+import { browserConfig } from './browserConfig.js';
 
 export const config = deepmerge(wdioconfig.config, {
   ...wdioconfig,

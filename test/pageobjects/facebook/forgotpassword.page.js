@@ -25,7 +25,7 @@ class ForgotPassword extends actionhelper {
             logInfo(`OTP entered successfully`);  // Log success message
         } catch (error) {
             logError(`Error entering OTP: ${otp}`, error);  // Log error if OTP entry fails
-            throw new Error(`Failed to enter OTP: ${otp}`);  // Rethrow the error for further handling
+            throw error;  // Rethrow the error for further handling
         }
     }
 
@@ -41,7 +41,7 @@ class ForgotPassword extends actionhelper {
             logInfo('Successfully clicked the "Continue" button');  // Log success message
         } catch (error) {
             logError('Error clicking the "Continue" button', error);  // Log error if button click fails
-            throw new Error('Failed to click the "Continue" button');  // Rethrow the error for further handling
+            throw error;  // Rethrow the error for further handling
         }
     }
 }

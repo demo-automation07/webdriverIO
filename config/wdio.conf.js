@@ -2,9 +2,7 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const allure = require('allure-commandline');
-const allure_directory = './report/allure';
-const json_directory = "./report/json-report";
-const timeline_directory = "./report/timeline_report";
+import { allureReportDirectory,jsonReportDirectory,timelineReportDirectory } from './directory.js'
 import mergeResults from '@wdio/json-reporter/mergeResults';
 const { TimelineService } = require('wdio-timeline-reporter/timeline-service');
 const fs = require('fs');
@@ -167,13 +165,13 @@ export const config = {
         'spec',
 
         ['allure', {
-            outputDir: allure_directory + '/allure-results',
+            outputDir: allureReportDirectory + '/allure-results',
             disableWebdriverStepsReporting: true,
             disableWebdriverScreenshotsReporting: false,
         }],
 
         ['json', {
-            outputDir: json_directory,
+            outputDir: jsonReportDirectory,
             outputFileFormat: (opts) => {
                 // const specName = path.basename(opts.specs[0], '.js');
                 //  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
@@ -184,7 +182,7 @@ export const config = {
             // combined: true
         }],
         ['timeline', 
-            { outputDir: timeline_directory ,
+            { outputDir: timelineReportDirectory ,
               fileNamw: 'timeline-report.html',
               embedImages: true,
               images:{
@@ -371,14 +369,14 @@ export const config = {
         
         // Merge the individual results into a combined report
         try {
-            mergeResults(json_directory, '.*results-.*', 'combined-result.json');
+            mergeResults(jsonReportDirectory, '.*results-.*', 'combined-result.json');
             console.log('JSON reports successfully merged');
         } catch (err) {
             console.error('Error merging JSON reports:', err);
             return;
         }
         const reportError = new Error('Could not generate Allure report');
-        const generation = allure(['generate', allure_directory + '/allure-results', '--clean', '-o', allure_directory + '/allure-report']);
+        const generation = allure(['generate', allureReportDirectory + '/allure-results', '--clean', '-o', allureReportDirectory + '/allure-report']);
 
         return new Promise((resolve, reject) => {
             const generationTimeout = setTimeout(

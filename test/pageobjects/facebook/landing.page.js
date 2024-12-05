@@ -47,7 +47,7 @@ class LandingPage extends actionhelper {
             logInfo('Successfully clicked login button');  // Log success message
         } catch (error) {
             logError('Error during login', error);  // Log any errors encountered during login
-            throw new Error('Login failed');  // Throw error if login fails
+            throw error;  // Throw error if login fails
         }
     }
 
@@ -62,7 +62,7 @@ class LandingPage extends actionhelper {
             logInfo('Successfully clicked "Forgot Password" link');  // Log success message
         } catch (error) {
             logError('Error clicking "Forgot Password" link', error);  // Log error if link click fails
-            throw new Error('Failed to click "Forgot Password" link');  // Throw error to stop further execution
+            throw error;  // Throw error to stop further execution
         }
     }
 
@@ -80,7 +80,7 @@ class LandingPage extends actionhelper {
             logInfo('Successfully clicked "Try Another Way" button');  // Log success message
         } catch (error) {
             logError('Error clicking "Try Another Way" button', error);  // Log error if button click fails
-            throw new Error('Failed to click "Try Another Way" button');  // Throw error to stop further execution
+            throw error;  // Throw error to stop further execution
         }
     }
 
@@ -95,7 +95,7 @@ class LandingPage extends actionhelper {
             logInfo('Successfully clicked "Continue" button');  // Log success message
         } catch (error) {
             logError('Error clicking "Continue" button', error);  // Log error if button click fails
-            throw new Error('Failed to click "Continue" button');  // Throw error to stop further execution
+            throw error;  // Throw error to stop further execution
         }
     }
 }

@@ -1,11 +1,13 @@
 import nodemailer from 'nodemailer';
-const report_directory = "./report/json-report";
+import { jsonReportDirectory } from '../../config/directory.js';
 import smtpTransport from 'nodemailer-smtp-transport';
-
-
+import yaml from 'js-yaml';
 import fs from 'fs';
+const reportData = yaml.load(fs.readFileSync('./reportingConfig/reportconfig.yml', 'utf8'));
 
-const data = fs.readFileSync(report_directory + `/combined-result.json`);
+
+
+const data = fs.readFileSync(jsonReportDirectory + `/combined-result.json`);
 const jsonData = JSON.parse(data);
 0
 var totalTestCasePlanned = jsonData.suites.length;
@@ -123,18 +125,19 @@ const transporter = nodemailer.createTransport(
     port: 465,
     secure: true,
     auth: {
-      user: "automationdemo07@gmail.com",
-      pass: "mcvk ozsx auhv yfvd",
+      user: reportData.mailReportFrom,
+      pass: reportData.mailFromAuthentication,
     },
   })
 );
+
 
 const sendEmail = async () => {
   try {
 
     const mailOptions = {
-      from: "automationdemo07@gmail.com",
-      to: ["kiruthika.krishnamoorthy@ideas2it.com"],
+      from: reportData.mailReportFrom,
+      to: reportData.mailReportTo,
       subject: `UI Automation Report - ${dateFormat}`,
       text: `Hi Team,\n\n
              Please find the attachment of the automation Report.
@@ -163,11 +166,22 @@ const sendEmail = async () => {
         </html>
         `
         ,
-        attachments: [{
-          path: './report/timeline_report/timeline-report.html',               // Provide the path to the HTML file
-          contentType: 'text/html'          // Ensure the file is treated as an HTML file
-      }]
+        attachments: []
     };
+     // Conditionally attach PDF and HTML based on YML configuration
+  if (reportData.attachPdfReportWithmail === 'yes') {
+    mailOptions.attachments.push({
+      path: './report/json_report/final-report.pdf', // Path to your PDF file
+      contentType: 'application/pdf',
+    });
+  }
+
+  if (reportData.attachHtmlReportWithMail === 'yes') {
+    mailOptions.attachments.push({
+      path: './report/timeline_report/timeline-report.html', // Path to your HTML file
+      contentType: 'text/html',
+    });
+  }
 
     const info = await transporter.sendMail(mailOptions);
     console.log('Email sent:', info.messageId);

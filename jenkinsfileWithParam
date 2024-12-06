@@ -1,0 +1,100 @@
+pipeline {
+    agent any  // Runs on any available agent
+
+    environment {
+        WORKSPACE_DIR = 'C:/JenkinsDemo/Pipeline'
+        ALLURE_RESULTS_DIR = 'allure-results'  // Allure results directory
+        ALLURE_REPORT_DIR = 'allure-report'    // Directory to store the Allure report
+    }
+
+    parameters {
+        // Choice parameter for selecting the browser
+        choice(name: 'BROWSER', choices: ['chrome', 'firefox', 'MicrosoftEdge'], description: 'Choose the browser for testing')
+        
+        // Boolean parameter for sending reports via mail
+        booleanParam(name: 'SEND_REPORT_VIA_MAIL', defaultValue: false, description: 'Send the report via email')
+        
+        // Choice parameter for selecting the environment (staging or production)
+        choice(name: 'ENV', choices: ['qa', 'prod','uat','dev'], description: 'Choose the environment')
+        
+        // Choice parameter for selecting the test suite to run
+        choice(name: 'SUITE', choices: ['TC_smoke', 'TC_regression', 'TC_one', 'TC_end2end'], description: 'Choose the test suite to run')
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                script {
+                    echo 'Cloning Git repository...'
+                    git url: 'https://github.com/demo-automation07/webdriverIO.git', branch: 'main'
+                }
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                script {
+                    echo 'Installing dependencies...'
+                    dir(WORKSPACE_DIR) {
+                        bat 'npm install'
+                    }
+                }
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                script {
+                    echo "Running tests in the ${params.ENV} environment with ${params.BROWSER} browser..."
+                    echo "Running ${params.SUITE} suite..."
+                    dir(WORKSPACE_DIR) {
+                        bat "npx wdio run ./config/wdio.conf.js --stagingEnv ${params.ENV} --suite ${params.SUITE} --browser ${params.BROWSER}"
+                    }
+                }
+            }
+        }
+
+        stage('Generate Allure Report') {
+            steps {
+                script {
+                    echo 'Generating Allure Report...'
+                    dir(WORKSPACE_DIR) {
+                        bat "allure generate ${ALLURE_RESULTS_DIR} --clean -o ${ALLURE_REPORT_DIR}"
+                    }
+                }
+            }
+        }
+
+        stage('Publish Allure Report') {
+            steps {
+                allure includeProperties: false, jdk: '', results: [[path: "${WORKSPACE_DIR}/${ALLURE_REPORT_DIR}"]]
+            }
+        }
+
+        stage('Send Report via Email') {
+            when {
+                expression { return params.SEND_REPORT_VIA_MAIL }
+            }
+            steps {
+                script {
+                    echo 'Sending report via email...'
+                    dir(WORKSPACE_DIR) {
+                        bat 'npm run send_email' // Assuming you have a script to send email
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline execution completed.'
+        }
+        success {
+            echo 'Pipeline finished successfully.'
+        }
+        failure {
+            echo 'Pipeline failed. Check logs for details.'
+        }
+    }
+}

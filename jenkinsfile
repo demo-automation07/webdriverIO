@@ -6,6 +6,10 @@ pipeline {
         WORKSPACE_DIR = 'C:/JenkinsDemo/Pipeline'
     }
 
+    triggers {
+        cron('H 0 1,15 * *')  // Runs every 15th and 1st day of every month at midnight
+    }
+
     stages {
         stage('Checkout Code') {
             steps {
@@ -36,7 +40,7 @@ pipeline {
                     echo 'Running smoke tests...'
                     dir(WORKSPACE_DIR) {
                         // Run smoke tests using npm run test:smoke
-                        bat 'npm run test:qa',
+                        bat 'npm run test:qa'
                         bat 'npm run pdf:report'
                     }
                 }
@@ -49,14 +53,12 @@ pipeline {
                     echo 'Running UAT End-to-End tests...'
                     dir(WORKSPACE_DIR) {
                         // Run UAT end-to-end tests using npm run test:uat_end2end
-                        bat 'npm run test:qa',
+                        bat 'npm run test:qa'
                         bat 'npm run send_email'
                     }
                 }
             }
         }
-
-       
     }
 
     post {

@@ -53,7 +53,7 @@ pipeline {
                     echo 'Running UAT End-to-End tests...'
                     dir(WORKSPACE_DIR) {
                         // Run UAT end-to-end tests using npm run test:uat_end2end
-                        bat 'npm run test:qa'
+                        bat 'npm run test:uat'
                         bat 'npm run send_email'
                     }
                 }

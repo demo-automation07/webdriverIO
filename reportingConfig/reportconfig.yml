@@ -1,5 +1,5 @@
 mailReportFrom: automationdemo07@gmail.com
 mailFromAuthentication: mcvk ozsx auhv yfvd
-mailReportTo: ['kiruthika.krishnamoorthy@ideas2it.com']
+mailReportTo: <specify required email>
 attachPdfReportWithmail: yes
 attachHtmlReportWithMail: yes

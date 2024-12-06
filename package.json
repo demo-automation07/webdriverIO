@@ -33,6 +33,7 @@
     "wdio": "wdio run ./config/wdio.conf.js",
     "wdio:docker": "wdio run ./config/wdio.conf.docker.js",
     "report": "allure generate --clean ./report/allure/allure-results -o allure-report",
+    "test:dynamic": "npx wdio ./config/wdio.conf.browser.js --stagingEnv qa --suite TC_one --browser chrome",
     "test:qa": "npx wdio ./config/wdio.conf.js --stagingEnv qa",
     "test:dev": "npx wdio ./config/wdio.conf.js --stagingEnv dev",
     "test:uat": "npx wdio ./config/wdio.conf.js --stagingEnv uat",

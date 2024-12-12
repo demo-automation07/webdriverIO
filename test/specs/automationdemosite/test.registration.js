@@ -8,7 +8,7 @@ const filePath = path.resolve('./test/data/uploadfile/sample-pdf-file.pdf');
 import constant from '../../data/constant.js';
 import datafeed from '../../data/data.feed.json' with { type: 'json' };
 import { getStagingEnv } from '../../utils/envParam.js';
-import configData from '../../../config/config.json' with { type: 'json' };
+import configData from '../../../config/config.json' assert { type: 'json' };
 
 
 describe('Register a user in automation demo application with fileupload', () => {
